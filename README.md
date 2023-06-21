@@ -1,2 +1,4 @@
 # dispersion-complete-graphs
-Implementation of the experiments on the Paper "Dispersion on Complete Graphs"
+**Implementierung der Experimente aus dem Paper "Dispersion on Complete Graphs"**
+
+Python Implementierung schon sehr langsam bei n=1.000.000 und M=n/2
