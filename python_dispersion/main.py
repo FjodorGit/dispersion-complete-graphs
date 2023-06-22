@@ -26,8 +26,7 @@ def step_dict(graph: dict):
     destinaions = []
     for key, value in graph.items():
         if value > 1: # particles on the node are unhappy
-            possible_destinations = graph_nodes[:key] + graph_nodes[key+1:]
-            destinaions += random.choices(possible_destinations, k=value) # list of nodes where the unhappy particles move to
+            destinaions += random.choices(graph_nodes, k=value) # list of nodes where the unhappy particles move to
         else:
             destinaions.append(key) # particle is happy and stays at its current node
     return Counter(destinaions) # counts the particles for each node as a dict
@@ -48,8 +47,7 @@ def step_list(graph) -> ArrayLike:
     destinations = []
     for index, value in enumerate(graph):
         if value > 1: # particles on the node are unhappy
-            possible_destinations = graph_nodes[:index] + graph_nodes[index+1:]
-            destinations += random.choices(possible_destinations, k=value) # list of nodes where the unhappy particles move to
+            destinations += random.choices(graph_nodes, k=value) # list of nodes where the unhappy particles move to
         elif value == 1:
             destinations.append(index)
             
