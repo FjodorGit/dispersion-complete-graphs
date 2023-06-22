@@ -8,8 +8,8 @@ __pycache__/
 
 # Distribution / packaging
 python_dispersion/pyvenv.cfg
+lib64
 .Python
-**lib64/
 build/
 develop-eggs/
 dist/
