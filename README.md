@@ -1,9 +1,9 @@
 # dispersion-complete-graphs
-**Implementierung der Experimente aus dem Paper "Dispersion on Complete Graphs"**
+**Implementierung der Experimente aus dem Paper "Dispersion on the Complete Graph"**
 
-<u>Python</u>
+<ins>Python</ins>
 - Implementierung des Graphen als Liste braucht für n=100.000 und m=50.000 etwa 5 min
 - Implementierung des Graphen als Dictionary braucht für n=100.00 und m=50.000 etwa 2 min
 
-<u>Rust</u>
+<ins>Rust</ins>
 - Implementierung des Graphen als Vector braucht für n=100.000 und m=50.000 etwa 10 sec
