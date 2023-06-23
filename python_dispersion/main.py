@@ -43,7 +43,7 @@ def simulate_with_list():
         # print("graph:", graph)
         assert np.sum(graph) == M
 
-def step_list(graph) -> ArrayLike:
+def step_list(graph: NDArray) -> ArrayLike:
     destinations = []
     for index, value in enumerate(graph):
         if value > 1: # particles on the node are unhappy
