@@ -31,7 +31,7 @@ void step(int **graph, const uint n, int *maxp, int *destinations) {
   }
 }
 
-int simulate(uint num_simulations, uint graph_size, uint pariticle_count) {
+int *simulate(uint num_simulations, uint graph_size, uint pariticle_count) {
 
   int maximum;
   int num_steps;
@@ -61,44 +61,5 @@ int simulate(uint num_simulations, uint graph_size, uint pariticle_count) {
   }
 
   free(graph);
-  int average = 0;
-  for (int i = 0; i < num_simulations; i++) {
-    average += result[i];
-  }
-  return average / num_simulations;
-}
-
-void run_experiment() {
-  const int number_of_simulations = 200;
-  const float epsilon = 0.05;
-  FILE *files[3] = {fopen("./results/data/smaller_half_graph_size.txt", "w"),
-                    fopen("./results/data/half_graph_size.txt", "w"),
-                    fopen("./results/data/bigger_half_graph_size.txt", "w")};
-
-  for (int file_index = 0; file_index < 3; file_index++) {
-    if (files[file_index] == NULL) {
-      printf("Failed to open file %d", file_index);
-      return;
-    }
-  }
-  for (int graph_size = 100; graph_size <= 1000; graph_size += 50) {
-    printf("Graph size: %d \n", graph_size);
-    int particles_count[3] = {(int)((1 - epsilon) * (graph_size / 2)),
-                              graph_size / 2,
-                              (int)((1 + epsilon) * (graph_size / 2))};
-    for (int pidx = 0; pidx < 3; pidx++) {
-      int average_num_steps =
-          simulate(number_of_simulations, graph_size, particles_count[pidx]);
-      printf("Average num steps: %d \n", average_num_steps);
-      fprintf(files[pidx], "%d %d\n", graph_size, average_num_steps);
-    }
-    printf("\n");
-  }
-}
-
-int main() {
-  pcg32_srandom(time(0), 42);
-
-  run_experiment();
-  return 0;
+  return result;
 }
