@@ -24,8 +24,8 @@ void run_experiment(const int graph_size, const int number_of_simulations,
   }
 
   if (strcmp(particles_count, "smaller") == 0) {
-    epsilon = -0.05;
-    file_name = "results/distribution/data/distribution_smaller.txt";
+    epsilon = -0.04;
+    file_name = "results/distribution/data/distribution_smaller_100000.txt";
   }
 
   pcg32_srandom(time(0), 42);
@@ -48,6 +48,6 @@ void run_experiment(const int graph_size, const int number_of_simulations,
 
 int main() {
   const int number_of_simulations = 10000;
-  const int graph_size = 10000;
-  run_experiment(graph_size, number_of_simulations, "bigger");
+  const int graph_size = 100000;
+  run_experiment(graph_size, number_of_simulations, "equal");
 }
