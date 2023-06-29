@@ -5,7 +5,7 @@ set key right top
 set title 'Runtime evaluation'      # Set the plot title
 set xlabel 'Graphsize'        # Set the x-axis label
 set ylabel 'Timesteps'        # Set the y-axis label
-set output 'plot.pdf'
+set output 'runtime_evalation.pdf'
 
 plot "data/half_graph_size.txt" w l ls 1 title "Graphsize/2", \
      "data/smaller_half_graph_size.txt" w l ls 2 title "(1 - epsilon) * Graphsize/2", \
