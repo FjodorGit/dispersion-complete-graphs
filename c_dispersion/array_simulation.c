@@ -1,4 +1,5 @@
 #include "pcg/pcg_basic.h"
+#include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -38,18 +39,19 @@ int step(int **graph, const uint n, int *maxp, int *destinations) {
 
 int *simulate(uint num_simulations, uint graph_size, uint pariticle_count) {
 
-  int maximum;
-  int num_steps;
-  int *graph = (int *)calloc(graph_size, sizeof(int));
-  int *destinations = (int *)malloc(graph_size * sizeof(int));
-
   int *result = (int *)malloc(num_simulations * sizeof(int));
 
+#pragma omp parallel for
   for (int i = 0; i < num_simulations; i++) {
-    memset(graph, 0, graph_size * sizeof(int));
+    int maximum = pariticle_count;
+    int *graph = (int *)calloc(graph_size, sizeof(int));
+
+    // array initialized here, to only allocate the memory one time per
+    // simulation
+    int *destinations = (int *)malloc(graph_size * sizeof(int));
     graph[0] = pariticle_count;
     maximum = pariticle_count;
-    num_steps = 0;
+    int num_steps = 0;
     while (maximum > 1) {
       step(&graph, graph_size, &maximum, destinations);
       num_steps++;
@@ -68,9 +70,10 @@ int *simulate(uint num_simulations, uint graph_size, uint pariticle_count) {
     }
 
     result[i] = num_steps;
+    free(graph);
+    free(destinations);
   }
 
-  free(graph);
   return result;
 }
 
