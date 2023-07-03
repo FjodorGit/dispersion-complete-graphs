@@ -8,8 +8,8 @@
 
 void run_experiment() {
   pcg32_srandom(time(0), 42);
-  const int graph_size = 100000;
-  const int particles_count[3] = {49000, 50000, 50500};
+  const int graph_size = 1000000;
+  const int particles_count[3] = {495000, 500000, 505000};
 
   FILE *file = fopen("results/process/data/unhappy_particles_process.txt", "w");
 
