@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -O3 -fopenmp
+CFLAGS = -Wall -Wextra -O3 -fopenmp -pthread
 SRC = pcg/pcg_basic.c simulation.h simulation.c graphs/*.c graphs/graphs.h
 
 all: distribution process

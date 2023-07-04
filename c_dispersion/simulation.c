@@ -13,13 +13,15 @@ int *simulate(uint num_simulations, Graph graph, uint pariticle_count) {
 
 #pragma omp parallel for
   for (int i = 0; i < num_simulations; i++) {
+
+    // initialize variables inside for-loop to private them for every thread
     int maximum = pariticle_count;
     int *graph_representation = (int *)calloc(graph.size, sizeof(int));
+    graph_representation[0] = pariticle_count;
 
     // array initialized here, to only allocate the memory one time per
     // simulation
     int *destinations = (int *)malloc(pariticle_count * sizeof(int));
-    graph_representation[0] = pariticle_count;
 
     int num_steps = 0;
     while (maximum > graph.capacity) {

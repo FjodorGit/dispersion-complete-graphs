@@ -65,15 +65,12 @@ int main(int argc, char *argv[]) {
       break;
 
     case 't':
-      if (strcmp(optarg, "fully-connected") != 0 && strcmp(optarg, "circle") &&
-          strcmp(optarg, "grid")) {
-
-        printf("Unknown graph %s\n", optarg);
+      if (strcmp(optarg, "circle")) {
+        stepper = step_circle;
+      } else if (strcmp(optarg, "grid")) {
+        printf("Grid graph not implemented yet\n");
         exit(1);
       }
-
-      stepper = step_fully_connected;
-
       break;
     case 'c':
       capacity = atoi(optarg);
