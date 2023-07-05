@@ -8,7 +8,8 @@
 #include <time.h>
 
 int step_fully_connected(int **graph_representation, int graph_size,
-                         int capacity, int *maxp, int *destinations) {
+                         int capacity, int *maxp, int *destinations,
+                         pcg32_random_t *rngptr) {
 
   int destinations_count = 0;
   int unhappy_count = 0;
@@ -18,7 +19,7 @@ int step_fully_connected(int **graph_representation, int graph_size,
     if (value > capacity) {
       for (int j = 0; j < value; j++) {
         unhappy_count++;
-        int random_index = pcg32_boundedrand(graph_size);
+        int random_index = pcg32_boundedrand_r(rngptr, graph_size);
         destinations[destinations_count++] = random_index;
       }
     } else if (value != 0) {
