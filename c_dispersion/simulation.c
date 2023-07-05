@@ -11,10 +11,9 @@ int *simulate(uint num_simulations, Graph graph) {
 
   int *result = (int *)malloc(num_simulations * sizeof(int));
 
-#pragma omp parallel for num_threads(16)
-  for (int i = 0; i < num_simulations; i++) {
-
-    // initialize variables inside for-loop to private them for every thread
+#pragma omp parallel num_threads(16)
+  {
+    // initialize variables inside block to private them for every thread
     int maximum = graph.particles_count;
     int *graph_representation = (int *)calloc(graph.size, sizeof(int));
     graph_representation[0] = graph.particles_count;
@@ -24,25 +23,31 @@ int *simulate(uint num_simulations, Graph graph) {
     int *destinations = (int *)malloc(graph.particles_count * sizeof(int));
 
     int num_steps = 0;
-    while (maximum > graph.capacity) {
-      graph.stepper(&graph_representation, graph.size, graph.capacity, &maximum,
-                    destinations);
-      num_steps++;
+    printf("Parallization\n");
 
-      // Print the result
-      // printf("[ ");
-      // for (int i = 0; i < graph_size; i++) {
-      //   printf("%d ", graph[i]);
-      // }
-      // printf("] \n");
+#pragma omp for
+    for (int i = 0; i < num_simulations; i++) {
+
+      while (maximum > graph.capacity) {
+        graph.stepper(&graph_representation, graph.size, graph.capacity,
+                      &maximum, destinations);
+        num_steps++;
+
+        // Print the result
+        // printf("[ ");
+        // for (int i = 0; i < graph_size; i++) {
+        //   printf("%d ", graph[i]);
+        // }
+        // printf("] \n");
+      }
+      // printf("Num steps: %d \n", num_steps);
+
+      if (i % 100 == 0) {
+        printf("Simulation %d/%d \n", i, num_simulations);
+      }
+
+      result[i] = num_steps;
     }
-    // printf("Num steps: %d \n", num_steps);
-
-    if (i % 100 == 0) {
-      printf("Simulation %d/%d \n", i, num_simulations);
-    }
-
-    result[i] = num_steps;
     free(graph_representation);
     free(destinations);
   }

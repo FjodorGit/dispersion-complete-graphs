@@ -22,7 +22,7 @@ void run_experiment(Graph graph, const int number_of_simulations) {
     }
   }
 
-  printf("file_name: %s", file_name);
+  printf("file_name: %s\n", file_name);
   sprintf(file_name, "%s/distribution_for_n=%d_M=%d.dat", file_name, graph.size,
           graph.particles_count);
 
