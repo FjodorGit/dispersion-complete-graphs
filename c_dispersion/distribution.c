@@ -46,7 +46,7 @@ void run_experiment(Graph graph, const int number_of_simulations) {
 int main(int argc, char *argv[]) {
   const int number_of_simulations = 10000;
 
-  Graph graph = get_graph(argc, argv);
+  Graph graph = get_graph_from_commandline(argc, argv);
 
   run_experiment(graph, number_of_simulations);
 }

@@ -1,3 +1,3 @@
 #include "../graphs/graphs.h"
 
-Graph get_graph(int argc, char *argv[]);
+Graph get_graph_from_commandline(int argc, char *argv[]);

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-Graph get_graph(int argc, char *argv[]) {
+Graph get_graph_from_commandline(int argc, char *argv[]) {
   stepper stepper = step_fully_connected;
   int capacity = 1;
   int graph_size = 2;
