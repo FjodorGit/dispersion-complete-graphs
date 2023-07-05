@@ -11,22 +11,25 @@ int *simulate(uint num_simulations, Graph graph) {
 
   int *result = (int *)malloc(num_simulations * sizeof(int));
 
-#pragma omp parallel num_threads(16)
+#pragma omp parallel
   {
     // initialize variables inside block to private them for every thread
-    int maximum = graph.particles_count;
+    int maximum, num_steps;
     int *graph_representation = (int *)calloc(graph.size, sizeof(int));
-    graph_representation[0] = graph.particles_count;
 
     // array initialized here, to only allocate the memory one time per
     // simulation
     int *destinations = (int *)malloc(graph.particles_count * sizeof(int));
 
-    int num_steps = 0;
     printf("Parallization\n");
 
 #pragma omp for
     for (int i = 0; i < num_simulations; i++) {
+
+      memset(graph_representation, 0, graph.size * sizeof(int));
+      graph_representation[0] = graph.particles_count;
+      maximum = graph.particles_count;
+      num_steps = 0;
 
       while (maximum > graph.capacity) {
         graph.stepper(&graph_representation, graph.size, graph.capacity,
