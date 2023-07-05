@@ -11,7 +11,7 @@ int *simulate(uint num_simulations, Graph graph) {
 
   int *result = (int *)malloc(num_simulations * sizeof(int));
 
-#pragma omp parallel for
+#pragma omp parallel for num_threads(16)
   for (int i = 0; i < num_simulations; i++) {
 
     // initialize variables inside for-loop to private them for every thread
