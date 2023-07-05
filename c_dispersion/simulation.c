@@ -7,7 +7,7 @@
 #include <sys/random.h>
 #include <time.h>
 
-int *simulate(uint num_simulations, Graph graph, uint pariticle_count) {
+int *simulate(uint num_simulations, Graph graph) {
 
   int *result = (int *)malloc(num_simulations * sizeof(int));
 
@@ -15,13 +15,13 @@ int *simulate(uint num_simulations, Graph graph, uint pariticle_count) {
   for (int i = 0; i < num_simulations; i++) {
 
     // initialize variables inside for-loop to private them for every thread
-    int maximum = pariticle_count;
+    int maximum = graph.particles_count;
     int *graph_representation = (int *)calloc(graph.size, sizeof(int));
-    graph_representation[0] = pariticle_count;
+    graph_representation[0] = graph.particles_count;
 
     // array initialized here, to only allocate the memory one time per
     // simulation
-    int *destinations = (int *)malloc(pariticle_count * sizeof(int));
+    int *destinations = (int *)malloc(graph.particles_count * sizeof(int));
 
     int num_steps = 0;
     while (maximum > graph.capacity) {
@@ -50,9 +50,9 @@ int *simulate(uint num_simulations, Graph graph, uint pariticle_count) {
   return result;
 }
 
-int *unhappy_process(Graph graph, uint pariticle_count, int *num_steps) {
+int *unhappy_process(Graph graph, int *num_steps) {
 
-  int maximum;
+  int maximum = graph.particles_count;
   (*num_steps) = 0;
   int *graph_representation = (int *)calloc(graph.size, sizeof(int));
   int *destinations = (int *)malloc(graph.size * sizeof(int));
@@ -60,8 +60,7 @@ int *unhappy_process(Graph graph, uint pariticle_count, int *num_steps) {
   int capacity = 50000;
   int *result = (int *)calloc(capacity, sizeof(int));
 
-  graph_representation[0] = pariticle_count;
-  maximum = pariticle_count;
+  graph_representation[0] = graph.particles_count;
   while (maximum > graph.capacity) {
     result[*num_steps] = graph.stepper(&graph_representation, graph.size,
                                        graph.capacity, &maximum, destinations);

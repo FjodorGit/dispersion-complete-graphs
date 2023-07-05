@@ -1,5 +1,7 @@
 set terminal pdfcairo enhanced color dashed font "Alegreya, 14" rounded size 16 cm, 9.6 cm
 
+set key autotitle column head
+unset key
 set grid
 set ylabel 'Frequency'        # Set the x-axis label
 set xlabel 'Timesteps/√n'        # Set the y-axis label
@@ -9,7 +11,7 @@ load 'hist.fct'
 
 set title 'Distribution with n=100000 and M=51000'      # Set the plot title
 set output '../distribution_M>half_graphsize.pdf'
-plot '../data/distribution_bigger.txt' i 0 @hist ls 3 notitle
+plot '../distribution/fully_connected/capacity_1/data/distribution_for_n=1000_M=480' i 0 @hist ls 3 notitle
 
 set title 'Distribution with n=100000 and M=50000'      # Set the plot title
 set output '../distribution_M=half_graphsize.pdf'

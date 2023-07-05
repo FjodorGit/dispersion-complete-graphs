@@ -5,41 +5,37 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/random.h>
+#include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
 
-void run_experiment(Graph graph, const int number_of_simulations,
-                    char *particles_count) {
+void run_experiment(Graph graph, const int number_of_simulations) {
 
-  float epsilon;
-  char *file_name;
-
-  if (strcmp(particles_count, "bigger") == 0) {
-    epsilon = 0.01;
-    file_name = "results/distribution/data/distribution_bigger.txt";
+  char file_name[200] = "../results/distribution";
+  sprintf(file_name, "%s/%s/capacity_%d/data", file_name, graph.graph_type,
+          graph.capacity);
+  struct stat st = {0};
+  if (stat(file_name, &st) == -1) {
+    if (mkdir(file_name, 0700) == -1) {
+      perror("Error creating directory");
+      exit(1);
+    }
   }
 
-  if (strcmp(particles_count, "equal") == 0) {
-    epsilon = 0;
-    file_name = "results/distribution/data/distribution_equal.txt";
-  }
-
-  if (strcmp(particles_count, "smaller") == 0) {
-    epsilon = -0.02;
-    file_name = "results/distribution/data/distribution_smaller.txt";
-  }
+  printf("file_name: %s", file_name);
+  sprintf(file_name, "%s/distribution_for_n=%d_M=%d.dat", file_name, graph.size,
+          graph.particles_count);
 
   pcg32_srandom(time(0), 42);
-  const int num_particles = (1 + epsilon) * (graph.size / 2);
 
   FILE *file = {fopen(file_name, "w")};
 
   if (file == NULL) {
-    printf("Failed to open file");
+    printf("Failed to open file %s\n", file_name);
     return;
   }
 
-  int *result = simulate(number_of_simulations, graph, num_particles);
+  int *result = simulate(number_of_simulations, graph);
   for (int i = 0; i < number_of_simulations; i++) {
     fprintf(file, "%f\n", (float)result[i] / sqrt(graph.size));
   }
@@ -50,43 +46,7 @@ void run_experiment(Graph graph, const int number_of_simulations,
 int main(int argc, char *argv[]) {
   const int number_of_simulations = 10000;
 
-  stepper stepper = step_fully_connected;
-  int capacity = 1;
-  int graph_size = 2;
-  int opt;
+  Graph graph = get_graph(argc, argv);
 
-  while ((opt = getopt(argc, argv, "s:t:c:")) != -1) {
-    switch (opt) {
-    case 's':
-      graph_size = atoi(optarg);
-      if (graph_size < 2) {
-        printf("Graph size has to be at least two\n");
-      }
-      break;
-
-    case 't':
-      if (strcmp(optarg, "circle")) {
-        stepper = step_circle;
-      } else if (strcmp(optarg, "grid")) {
-        printf("Grid graph not implemented yet\n");
-        exit(1);
-      }
-      break;
-    case 'c':
-      capacity = atoi(optarg);
-      if (capacity < 1) {
-        printf("Capacity has to be at least 1\n");
-        exit(1);
-      }
-      break;
-
-    case '?':
-      printf("Unknown option: %c\n", optopt);
-      exit(1);
-    }
-  }
-
-  Graph graph = {.size = graph_size, .capacity = capacity, .stepper = stepper};
-
-  run_experiment(graph, number_of_simulations, "equal");
+  run_experiment(graph, number_of_simulations);
 }

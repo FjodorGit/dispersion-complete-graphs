@@ -1,6 +1,5 @@
-#include "graphs/graphs.h"
+#include "utils/utils.h"
 
-int *simulate(unsigned int num_simulations, Graph graph,
-              unsigned int pariticle_count);
+int *simulate(unsigned int num_simulations, Graph graph);
 
-int *unhappy_process(Graph graph, unsigned int pariticle_count, int *num_steps);
+int *unhappy_process(Graph graph, int *num_steps);

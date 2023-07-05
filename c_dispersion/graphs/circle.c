@@ -28,7 +28,8 @@ int step_circle(int **graph_representation, const int graph_size,
         int check_bits = 0x1;
         printf("Value: %d | random: %d | sizeof(random) * 8: %lu\n", value,
                random, sizeof(random) * 8);
-        for (int j = 0; j < sizeof(random) * 8 && particle_counter < value;
+        for (long unsigned int j = 0;
+             j < sizeof(random) * 8 && particle_counter < value;
              j++, particle_counter++) {
           int left_or_right = random & check_bits;
           printf("Left or right: %d\n", left_or_right);
