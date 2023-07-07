@@ -14,6 +14,8 @@ int *simulate(uint num_simulations, Graph graph) {
 #pragma omp parallel
   {
     // initialize variables inside block to private them for every thread
+    pcg32_random_t rng;
+    pcg32_srandom_r(&rng, omp_get_thread_num(), time(NULL));
     int maximum, num_steps;
     int *graph_representation = (int *)calloc(graph.size, sizeof(int));
 
@@ -33,7 +35,7 @@ int *simulate(uint num_simulations, Graph graph) {
 
       while (maximum > graph.capacity) {
         graph.stepper(&graph_representation, graph.size, graph.capacity,
-                      &maximum, destinations);
+                      &maximum, destinations, &rng);
         num_steps++;
 
         // Print the result
@@ -64,14 +66,15 @@ int *unhappy_process(Graph graph, int *num_steps) {
   (*num_steps) = 0;
   int *graph_representation = (int *)calloc(graph.size, sizeof(int));
   int *destinations = (int *)malloc(graph.size * sizeof(int));
-
+  pcg32_random_t rng;
+  pcg32_srandom_r(&rng, omp_get_thread_num(), time(NULL));
   int capacity = 50000;
   int *result = (int *)calloc(capacity, sizeof(int));
 
   graph_representation[0] = graph.particles_count;
   while (maximum > graph.capacity) {
     result[*num_steps] = graph.stepper(&graph_representation, graph.size,
-                                       graph.capacity, &maximum, destinations);
+                                       graph.capacity, &maximum, destinations, &rng);
 
     if (*num_steps + 1 >= capacity) {
       capacity *= 2;
