@@ -10,7 +10,7 @@ Graph get_graph_from_commandline(int argc, char *argv[]) {
   int graph_size = 2;
   int particles_count = 0;
   int opt;
-  char *graph_type = "fully_connected";
+  char graph_type[100] = "fully_connected";
 
   printf("Initializing graph..\n");
 
@@ -24,10 +24,10 @@ Graph get_graph_from_commandline(int argc, char *argv[]) {
       break;
 
     case 't':
-      if (strcmp(optarg, "circle")) {
+      if (strcmp(optarg, "circle") == 0) {
         stepper = step_circle;
         strcpy(graph_type, optarg);
-      } else if (strcmp(optarg, "grid")) {
+      } else if (strcmp(optarg, "grid") == 0) {
         printf("Grid graph not implemented yet\n");
         exit(1);
       }
@@ -42,8 +42,8 @@ Graph get_graph_from_commandline(int argc, char *argv[]) {
 
     case 'p':
       particles_count = atoi(optarg);
-      if (particles_count < 1) {
-        printf("Capacity has to be at least 1\n");
+      if (particles_count < 2) {
+        printf("Particles count at least 2\n");
         exit(1);
       }
       break;

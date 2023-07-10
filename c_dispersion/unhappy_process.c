@@ -11,7 +11,7 @@ void run_experiment(Graph graph) {
   pcg32_srandom(time(0), 42);
   const int particles_count[3] = {0.99 * graph.particles_count,
                                   graph.particles_count,
-                                  graph.particles_count * 1.003};
+                                  graph.particles_count * 1.0025};
 
   char file_name[512] = "../results/unhappy_process";
   sprintf(file_name, "%s/%s/capacity_%d/data", file_name, graph.graph_type,
@@ -19,7 +19,7 @@ void run_experiment(Graph graph) {
   struct stat st = {0};
   if (stat(file_name, &st) == -1) {
     if (mkdir(file_name, 0700) == -1) {
-      perror("Error creating directory");
+      printf("Error creating directory: %s\n", file_name);
       exit(1);
     }
   }
@@ -35,8 +35,8 @@ void run_experiment(Graph graph) {
   int *num_steps_equal = malloc(sizeof(int));
   int *num_steps_smaller = malloc(sizeof(int));
   int *num_steps_bigger = malloc(sizeof(int));
-  int *unhappy_evaluation_equal = calloc(50000, sizeof(int));
-  int *unhappy_evaluation_smaller = calloc(50000, sizeof(int));
+  int *unhappy_evaluation_equal = calloc(100000, sizeof(int));
+  int *unhappy_evaluation_smaller = calloc(100000, sizeof(int));
   int *unhappy_evaluation_bigger = calloc(100000, sizeof(int));
 
   printf("Running unhappy process for n=%d and M=%d\n", graph.size,
@@ -54,7 +54,10 @@ void run_experiment(Graph graph) {
   unhappy_evaluation_bigger = unhappy_process(graph, num_steps_bigger);
   printf("Finished unhappy processes.");
 
-  for (int i = 0; i < *num_steps_bigger; i++) {
+  for (int i = 0;
+       unhappy_evaluation_bigger[i] != 0 || unhappy_evaluation_equal[i] != 0 ||
+       unhappy_evaluation_smaller[i] != 0;
+       i++) {
     fprintf(file, "%d %d %d %d \n", i, unhappy_evaluation_equal[i],
             unhappy_evaluation_smaller[i], unhappy_evaluation_bigger[i]);
   }

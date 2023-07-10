@@ -65,30 +65,42 @@ int *unhappy_process(Graph graph, int *num_steps) {
   int maximum = graph.particles_count;
   (*num_steps) = 0;
   int *graph_representation = (int *)calloc(graph.size, sizeof(int));
-  int *destinations = (int *)malloc(graph.size * sizeof(int));
+  int *destinations = (int *)malloc(graph.particles_count * sizeof(int));
   pcg32_random_t rng;
   pcg32_srandom_r(&rng, omp_get_thread_num(), time(NULL));
-  int capacity = 50000;
-  int *result = (int *)calloc(capacity, sizeof(int));
+  int array_capacity = 50000;
+  int *result = (int *)calloc(array_capacity, sizeof(int));
 
   graph_representation[0] = graph.particles_count;
   while (maximum > graph.capacity) {
-    result[*num_steps] = graph.stepper(&graph_representation, graph.size,
-                                       graph.capacity, &maximum, destinations, &rng);
 
-    if (*num_steps + 1 >= capacity) {
-      capacity *= 2;
-      int *should_not_be_null = realloc(result, capacity * sizeof(int));
-      if (should_not_be_null == NULL) {
+    // expanding result size
+    // printf("Step started: %d with maximum: %d\n", *num_steps, maximum);
+    if (*num_steps >= array_capacity) {
+      // Double the capacity
+      printf("Expanding");
+      array_capacity *= 2;
+      int *expanded_result = realloc(result, array_capacity * sizeof(int));
+      if (expanded_result == NULL) {
+        // Handle reallocation failure
         printf("Memory allocation failed. Exiting...\n");
         free(result); // Free the previously allocated memory
         exit(1);
       }
-      result = should_not_be_null;
+      result = expanded_result;
     }
 
+    result[*num_steps] =
+        graph.stepper(&graph_representation, graph.size, graph.capacity,
+                      &maximum, destinations, &rng);
+
+    // printf("Step finished: %d with maximum: %d\n", *num_steps, maximum);
     (*num_steps)++;
+    if (*num_steps % 100 == 0) {
+      printf("Step %d with maximum %d\n", *num_steps, maximum);
+    }
   }
+  // printf("Finished Simulation\n");
 
   free(graph_representation); // Free the graph array
   free(destinations);         // Free the destinations array

@@ -24,3 +24,11 @@ set output '../distribution/fully_connected/capacity_1/comparison_n=1000000.pdf'
 plot '../distribution/fully_connected/capacity_1/data/distribution_for_n=1000000_M=495000.dat' i 0 @hist ls 2 title "M=495000", \
 '../distribution/fully_connected/capacity_1/data/distribution_for_n=1000000_M=500000.dat' i 0 @hist ls 1 title "M=500000",\
 '../distribution/fully_connected/capacity_1/data/distribution_for_n=1000000_M=501000.dat' i 0 @hist ls 3 title "M=501000"
+
+set title 'Distribution with n=10000 and M=10000'
+set output '../distribution/fully_connected/capacity_2/M=graphsize.pdf'
+plot '../distribution/fully_connected/capacity_2/data/distribution_for_n=10000_M=10000.dat' i 0 @hist ls 1 notitle
+
+set title 'Distribution with n=10000 and M=10100'
+set output '../distribution/fully_connected/capacity_2/M>graphsize.pdf'
+plot '../distribution/fully_connected/capacity_2/data/distribution_for_n=10000_M=10100.dat' i 0 @hist ls 3 notitle

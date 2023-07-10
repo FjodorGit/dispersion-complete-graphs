@@ -7,7 +7,8 @@
 #include <time.h>
 
 int step_circle(int **graph_representation, const int graph_size,
-                const int capacity, int *maxp, int *destinations) {
+                const int capacity, int *maxp, int *destinations,
+                pcg32_random_t *rngptr) {
 
   int destinations_count = 0;
   int unhappy_count = 0;
@@ -16,6 +17,7 @@ int step_circle(int **graph_representation, const int graph_size,
     int value = (*graph_representation)[i];
     if (value > capacity) {
 
+      unhappy_count += value;
       // To reduce the amount of random numbers needed look at the single bits
       // of a random number:
       // For example 26 = 0b11010
@@ -26,13 +28,13 @@ int step_circle(int **graph_representation, const int graph_size,
       while (particle_counter < value) {
         int random = rand();
         int check_bits = 0x1;
-        printf("Value: %d | random: %d | sizeof(random) * 8: %lu\n", value,
-               random, sizeof(random) * 8);
+        // printf("Value: %d | random: %d | sizeof(random) * 8: %lu\n", value,
+        // random, sizeof(random) * 8);
         for (long unsigned int j = 0;
              j < sizeof(random) * 8 && particle_counter < value;
              j++, particle_counter++) {
           int left_or_right = random & check_bits;
-          printf("Left or right: %d\n", left_or_right);
+          printf("Left or right: %s\n", left_or_right == 0 ? "left" : "right");
           if (left_or_right == 0 && i > 0) {
             destinations[destinations_count++] = i - 1;
           } else if (left_or_right == 0 && i == 0) {
@@ -61,6 +63,7 @@ int step_circle(int **graph_representation, const int graph_size,
       *maxp = (*graph_representation)[destination];
     }
   }
+  printf("unhappy paritcles: %d \n", unhappy_count);
 
   return unhappy_count;
 }
