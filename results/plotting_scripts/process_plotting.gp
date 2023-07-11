@@ -31,9 +31,16 @@ plot "../unhappy_process/fully_connected/capacity_2/data/unhappy_process_n=10000
 "../unhappy_process/fully_connected/capacity_2/data/unhappy_process_n=1000000.dat" using 0:3 w l ls 2 title "M = 990000", \
 "../unhappy_process/fully_connected/capacity_2/data/unhappy_process_n=1000000.dat" using 0:4 w l ls 3 title "M = 1002500"
 
-set title 'Process of unhappy particles circle graph' 
-set yr [0:1000]
-set output '../unhappy_process/circle/capacity_1/unhappy_particles_process_circle.pdf'
-plot "../unhappy_process/circle/capacity_1/data/unhappy_process_n=10000.dat" using 1:2 w l ls 1 title "M = 500000", \
-"../unhappy_process/circle/capacity_1/data/unhappy_process_n=10000.dat" using 0:3 w l ls 2 title "M = 495000", \
-"../unhappy_process/circle/capacity_1/data/unhappy_process_n=10000.dat" using 0:4 w l ls 3 title "M = 501500"
+# set title 'Process of unhappy particles circle graph' 
+# set yr [0:1000]
+# set output '../unhappy_process/circle/capacity_1/unhappy_particles_process_circle.pdf'
+# plot "../unhappy_process/circle/capacity_1/data/unhappy_process_n=10000.dat" using 1:2 w l ls 1 title "M = 500000", \
+# "../unhappy_process/circle/capacity_1/data/unhappy_process_n=10000.dat" using 0:3 w l ls 2 title "M = 495000", \
+# "../unhappy_process/circle/capacity_1/data/unhappy_process_n=10000.dat" using 0:4 w l ls 3 title "M = 501500"
+
+set title 'Process of unhappy particles on a grid n=99856' 
+set yr [0:54000]
+set output '../unhappy_process/grid/capacity_1/unhappy_particles_process_grid.pdf'
+plot "../unhappy_process/grid/capacity_1/data/unhappy_process_n=99856.dat" using 1:2 w l ls 1 title "M = 500000", \
+"../unhappy_process/grid/capacity_1/data/unhappy_process_n=99856.dat" using 0:3 w l ls 2 title "M = 495000", \
+"../unhappy_process/grid/capacity_1/data/unhappy_process_n=99856.dat" using 0:4 w l ls 3 title "M = 500125"
