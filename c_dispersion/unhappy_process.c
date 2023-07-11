@@ -35,9 +35,9 @@ void run_experiment(Graph graph) {
   int *num_steps_equal = malloc(sizeof(int));
   int *num_steps_smaller = malloc(sizeof(int));
   int *num_steps_bigger = malloc(sizeof(int));
-  int *unhappy_evaluation_equal = calloc(100000, sizeof(int));
-  int *unhappy_evaluation_smaller = calloc(100000, sizeof(int));
-  int *unhappy_evaluation_bigger = calloc(100000, sizeof(int));
+  int *unhappy_evaluation_equal = calloc(200000, sizeof(int));
+  int *unhappy_evaluation_smaller = calloc(200000, sizeof(int));
+  int *unhappy_evaluation_bigger = calloc(200000, sizeof(int));
 
   printf("Running unhappy process for n=%d and M=%d\n", graph.size,
          graph.particles_count);

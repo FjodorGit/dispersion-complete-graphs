@@ -1,5 +1,6 @@
 #include "../simulation.h"
 #include <bits/getopt_core.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,8 +32,8 @@ Graph get_graph_from_commandline(int argc, char *argv[]) {
         stepper = step_line;
         strcpy(graph_type, optarg);
       } else if (strcmp(optarg, "grid") == 0) {
-        printf("Grid graph not implemented yet\n");
-        exit(1);
+        stepper = step_grid;
+        strcpy(graph_type, optarg);
       }
       break;
     case 'c':
@@ -55,6 +56,16 @@ Graph get_graph_from_commandline(int argc, char *argv[]) {
       printf("Unknown option: %c\n", optopt);
       exit(1);
     }
+  }
+
+  int graph_root = sqrt(graph_size);
+  if (strcmp(graph_type, "grid") == 0 &&
+      (graph_root * graph_root) != graph_size) {
+    printf("The graphsize specified(%d) cannot be a square grid.\n",
+           graph_size);
+    graph_size = graph_root * graph_root;
+    printf("The graphsize now is the next closest, that is a square: %d\n",
+           graph_size);
   }
 
   Graph graph = {.size = graph_size,

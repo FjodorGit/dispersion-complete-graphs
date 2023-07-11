@@ -78,7 +78,7 @@ int *unhappy_process(Graph graph, int *num_steps) {
     // printf("Step started: %d with maximum: %d\n", *num_steps, maximum);
     if (*num_steps >= array_capacity) {
       // Double the capacity
-      printf("Expanding");
+      printf("Expanding result size\n");
       array_capacity *= 2;
       int *expanded_result = realloc(result, array_capacity * sizeof(int));
       if (expanded_result == NULL) {
@@ -100,7 +100,7 @@ int *unhappy_process(Graph graph, int *num_steps) {
     // printf("]\n");
 
     (*num_steps)++;
-    if (*num_steps % 100 == 0) {
+    if (*num_steps % 1000 == 0) {
       printf("Step %d with maximum %d\n", *num_steps, maximum);
     }
   }
