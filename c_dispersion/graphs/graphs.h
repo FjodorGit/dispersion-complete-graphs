@@ -20,3 +20,7 @@ int step_fully_connected(int **graph_representation, const int graph_size,
 int step_circle(int **graph_representation, const int graph_size,
                 const int capacity, int *maxp, int *destinations,
                 pcg32_random_t *rngptr);
+
+int step_line(int **graph_representation, const int graph_size,
+              const int capacity, int *maxp, int *destinations,
+              pcg32_random_t *rngptr);

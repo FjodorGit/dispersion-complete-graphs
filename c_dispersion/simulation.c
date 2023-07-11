@@ -93,14 +93,17 @@ int *unhappy_process(Graph graph, int *num_steps) {
     result[*num_steps] =
         graph.stepper(&graph_representation, graph.size, graph.capacity,
                       &maximum, destinations, &rng);
+    // printf("[ ");
+    // for (int i = 0; i < graph.size; i++) {
+    //   printf("%d ", graph_representation[i]);
+    // }
+    // printf("]\n");
 
-    // printf("Step finished: %d with maximum: %d\n", *num_steps, maximum);
     (*num_steps)++;
     if (*num_steps % 100 == 0) {
       printf("Step %d with maximum %d\n", *num_steps, maximum);
     }
   }
-  // printf("Finished Simulation\n");
 
   free(graph_representation); // Free the graph array
   free(destinations);         // Free the destinations array

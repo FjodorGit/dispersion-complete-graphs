@@ -27,6 +27,9 @@ Graph get_graph_from_commandline(int argc, char *argv[]) {
       if (strcmp(optarg, "circle") == 0) {
         stepper = step_circle;
         strcpy(graph_type, optarg);
+      } else if (strcmp(optarg, "line") == 0) {
+        stepper = step_line;
+        strcpy(graph_type, optarg);
       } else if (strcmp(optarg, "grid") == 0) {
         printf("Grid graph not implemented yet\n");
         exit(1);
