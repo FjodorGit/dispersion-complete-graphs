@@ -1,0 +1,234 @@
+\documentclass{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{bbm}
+\usepackage{dsfont}
+\usepackage{mathtools}
+\usepackage{setspace}
+\usepackage[left=3.5cm, right=3.5cm]{geometry}
+
+\graphicspath{ {./images/} }
+\newtheorem{theorem}[subsection]{Theorem}
+\newtheorem{lemma}[subsection]{Lemma}
+\DeclareMathOperator{\EX}{\mathbb{E}}% expected value
+\DeclareMathOperator{\N0}{\mathbb{N}_0}
+\DeclareMathOperator{\Pb}{\mathds{P}}
+\newcommand{\Up}[2]{\mathcal{U}_{#1}^{#2}}
+\newcommand{\Hp}[2]{\mathcal{H}_{#1}^{#2}}
+\DeclareMathOperator{\Ind}{\mathbbm{1}}
+
+
+\title{Dispersion Process on Graphs}
+\author{Fjodor Kholodkov}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper investigates a synchronous process involving the movement of particles on the vertices of a graph G.
+The process was initially studied by Cooper, McDowell, Radzik, Rivera, and Shiraga (2018) and 
+further studied by De Ambroggio, Makai, and Panagiotou (2023).
+In this process, M particles are initially placed on a vertex of G, and at each time step, particles residing
+in vertices with at least two occupants independently move to a neighbouring vertex chosen uniformly at random.
+The process terminates when no vertex contains more than one particle.\\
+Cooper et al. demonstrated a phase transition phenomenon in the case of a complete graph with n vertices, occurring when the number of particles M equals n/2.
+De Ambroggio et al. further examined this phase transition, providing insights into the transition from logarithmic to exponential time behavior.
+In this paper, we explore the process under the condition that particles only move when they have N neighbours and aim 
+to determine the critical number of particles necessary to induce a phase transition.
+Empirical evidence is presented to support the claims made and to analyze the process on different graph structures.
+\end{abstract}
+
+\section{Introduction}
+Given are a graph $G$ and $M$ particles, that start out on a random vertex of $G$.
+At every timestep $t \in \N0$ every one of those $M$ particles is in either of two sets. 
+The first set $\Hp{t}{}$ is the set of $\textit{happy}$ particles.
+A particle is happy if there are $C - 1$ or less particles on the same vertex.
+The second set $\Up{t}{}$ is the set of $\textit{unhappy}$ particles.
+A particle is unhappy if there are $C$ or more particles on the same vertex.
+This number $C$ is the $\textit{capacity}$ of the graph. It is the amount of particles on a node required for the particles on the node to become unhappy.
+In Cooper et al. as well as in De Ambroggio et al. the capacity was always considered to be $1$.
+So at the start for $M \geq C$ all particles are unhappy. 
+At every timestep all unhappy particles independently choose a neighbouring vertex uniformly at random and move simultaniously to the selected vertex. 
+All happy particles stay at thier current vertex. 
+This procedure repeats until all particles are happy. \\
+Let $n$ be the $\textit{size}$ of the graph i.e the number of verticies in the graph.
+Of particular interest in previous studies is the random time $T_{n,M}$ 
+it takes for the process to terminate, depending on the size of the graph and the amount of particles. 
+For a complete graph the authors of \cite{cooper} identified $M = \frac{n}{2}$ to be a critical amount of particles.
+That means it is at this amount of particles, that the runtime behaviour of the process changes.
+
+\newpage
+In \cite{dispersion} a more detailed analysis of this process is conducted.\\
+Specifically given $M = (1 + \varepsilon)\frac{n}{2}$, one of the main result from the paper 
+establishes three diffrent behaviors based on the value of $\varepsilon$:
+\begin{itemize}
+  \item If $\varepsilon \leq e n^{-1/2}$, ($M < \frac{n}{2}$) then $\EX[T_{n,M}] = \Theta(\frac{1}{|\varepsilon|} \log(\varepsilon^{2}n))$.\\
+    So the time to termination grows logarithmicly with respect to $n$.
+  \item If $\varepsilon = O(n^{-1/2})$, ($M \approx \frac{n}{2}$) then $\EX[T_{n,M}] = \Theta(n^{-1/2})$.\\ 
+    So the time to termination grows jk with respect to $n$.
+  \item Else where $\varepsilon = \omega(n^{-1/2})$, ($M > \frac{n}{2}$) 
+    then $\EX[T_{n,M}] = \varepsilon^{-1} e^{\Theta(\varepsilon^{2}n)}$.\\ 
+    So the time to termination grows exponentialy with respect to $n$.
+\end{itemize}
+
+The goal of this paper is to further study the dispersion process and identifiy
+such critical amount of particles for diffrent capacities of fully connected graphs.
+Further I aim to provide empirical evidence for the established results and run similar 
+experiments for diffrent graph structures like a grid or a line.
+
+\section{Picking up on previous results}
+Important for proving the results from \cite{dispersion} is the expected change in the number of particles from one timestep to the next.
+Let the sizes of the happy and unhappy set at time $t$ be $U_t = |\Up{t}{}|$ and $H_t = |\Hp{t}{}|$.
+Then the authors of \cite{dispersion} establish, that
+\[\EX[U_{t+1} - U_t \ |\ U_t ] = U \varepsilon - \Theta(U_t^2/n)\]
+So at first the number of unhappy particles rapidly decreases as at first all particles are unhappy and so   
+\[ n \varepsilon < U_t \implies U_t \varepsilon < U_t^2/n\]
+However as the number of unhappy particles decreases the inequality $n \varepsilon < U_t$ may even start to reverse
+for $\varepsilon > 0$. In that case $\EX[U_{t+1} - U_t \ |\ U_t ]$ > 0, so the amount of unhappy particles is
+is expected to even increase from one time step to the next.
+If $\varepsilon < 0$, then $\EX[U_{t+1} - U_t \ |\ U_t ]$ stays negative througout 
+the whole process.
+To prove this asymtotic behaviour I first elaborate on Lemma from \cite{dispersion}, namely
+
+\begin{lemma}
+  \label{cap1lem}
+  At any timestep $t \in \mathbb{N}_0$ on a fully connected graph with capacity 1
+  \begin{equation}
+    \EX[U_{t+1} - U_t\ |\ U_t] = H_t \left( 1 - \left(1 - \frac{1}{n} \right)^{U_t} \right) - U_t \left( \frac{n - H_t}{n} \left(1 - \frac{1}{n} \right)^{U_t - 1} \right)
+  \end{equation}
+  Proof:
+\end{lemma}
+Consider 
+\[ X_{t+1} := |\Hp{t}{} \cap \ \Up{t+1}{} | \quad and \quad Y_{t+1} := |\Up{t}{} \cap \ \Hp{t+1}{}|\]
+A particle in $|\Hp{t}{} \cap \ \Up{t+1}|$ was happy at time $t$, but at $t+1$ an unhappy particle moved onto its node.
+Then $X_{t+1}$ is the amount of particles this happens to.
+And a particle in $|\Up{t}{} \cap \ \Hp{t+1}{}|$ was unhappy at time $t$, but moved to an empty node at $t + 1$.
+So $Y_{t+1}{}$ is the amount of particles that moved to an empty node.
+Recognizing, that the amount of unhappy particles at time $t+1$ consist of those, that stayed unhappy and those that became unhappy
+one obtains
+\[U_{t+1} = \underbrace{X_{t+1}}_{\text{ became unhappy }} + \underbrace{(U_t - Y_{t+1})}_{\text{stayed unhappy}} \implies U_{t+1} - U_t = X_{t+1} - Y_{t+1} \]
+Furthermore defining the indicator random variable for  $A \subset (\Up{t}{} \cup \Hp{t}{})$
+\[\Ind_{A} \colon \Hp{t}{} \cup \Up{t}{} \mapsto \{0,1\}\]
+\[\Ind_{A}(p) = 
+  \begin{cases*}
+    1 \quad \text{if}\ p \in A \\
+    0 \quad \text{else}
+  \end{cases*}
+\]
+it is possible to rewrite $X_{t+1}$ as
+\[X_{t+1} = \sum_{p \in \Hp{t}{}} \Ind_{\Up{t+1}{}}(p)\]
+and $Y_{t+1}$ as
+\[Y_{t+1} = \sum_{p \in \Up{t}{}} \Ind_{\Hp{t+1}{}}(p).\]
+Now using linearity of the expected value the problem decomposes into
+\begin{align*}
+  \EX[U_{t+1} - U_t\ |\ U_t] &= \EX[X_{t+1} - Y_{t+1}\ |\ U_t] \\
+                             &= \EX[X_{t+1}\ |\ U_t] - \EX[Y_{t+1}\ |\ U_t] \\
+                             &= \EX[\sum_{p \in \Hp{t}{}} \Ind_{\Up{t+1}{}}(p)\ |\ U_t] - \EX[\sum_{p \in \Up{t}{}} \Ind_{\Hp{t+1}{}}(p)\ |\ U_t] \\
+                             &= \sum_{p \in \Hp{t}{}} \EX[\Ind_{\Up{t+1}{}}(p)\ |\ U_t] - \sum_{p \in \Up{t}{}} \EX[\Ind_{\Hp{t+1}{}}(p)\ |\ U_t]
+\end{align*}
+  
+\begin{lemma}
+  At any timestep $t \in \mathbb{N}_0$ on a fully connected graph with capacity 2
+  \begin{equation}
+    \EX[U_{t+1} - U_t\ |\ U_t] = 
+  \end{equation}
+  Proof:
+\end{lemma}
+Since $\forall t \in \N0 \colon M = H_t + U_t$, determining $U_{t+1} - U_{t}$ is equivalent to determining $H_{t+1} - H_{t}$ as
+\[U_{t+1} - U_{t} = (M - H_{t+1}) - (M - H_{t}) = -(H_{t+1} - H_t)\]
+For this divide the set $\Hp{t}{}$ into
+\begin{align*}
+  \Hp{t}{} &= \Hp{t}{1} \ \dot{\cup}\ \Hp{t}{2} \ \text{where} \\
+  \Hp{t}{1} &= \{\text{particle is alone on its node}\} \\
+  \Hp{t}{2} &= \{\text{particle has a neighbour on its node}\}
+\end{align*}
+and define $H_t^1 = |\Hp{t}{1}|$ and $H_t^2 = |\Hp{t}{2}|$ accordingly. Clearly $\forall t \in \N0 \colon H_t^1 + H_t^2 = H_t$. 
+So 
+\[H_{t+1} - H_t = (H_{t+1}^2 + H_{t+1}^1) - (H_{t}^2 + H_{t}^1) = (H_{t+1}^2 - H_{t}^2) + (H_{t+1}^1 - H_{t}^1) \]
+Then similar to Lemma \ref{cap1lem} define
+\begin{align*}
+  X_{t+1}^1 = |\Hp{t}{1} \cap  \Up{t+1}{} | \quad &\text{and} \quad X_{t+1}^2 = |\Hp{t}{2} \cap  \Up{t+1}{} | \\
+  Y_{t+1}^1 = |\Up{t}{} \cap  \Hp{t+1}{1} | \quad &\text{and} \quad Y_{t+1}^2 = |\Up{t}{} \cap  \Hp{t+1}{2}| \\
+  Z_{t+1} &= |\Hp{t}{1} \cap  \Hp{t+1}{2} |
+\end{align*}
+Again notice, that the amount of particles which are alone on a node at time $t + 1$ is comprised of two groups: Those that remained alone and those 
+particles, that were unhappy and relocated to an empty node.
+\[H_{t+1}^1 = \underbrace{Y_{t+1}^1}_{\text{ moved to empty node }} + \underbrace{(H_t^1 - X_{t+1}^1 - Z_{t+1})}_{\text{remained alone}}
+\implies H_{t+1}^1 - H_t^1 = Y_{t+1}^1 - X_{t+1}^1 - Z_{t+1} \]
+And particles, that have one neighbour at time $t + 1$ consit of:
+Those that had a neighbour and did not get another. Those that were alone and got a neighbour. Unhappy particles becoming happy with a neighbour.
+\begin{gather*}
+  H_{t+1}^2 = \underbrace{Z_{t+1}}_{\text{alone, got a neighbour}} + 
+              \underbrace{(H_t^2 - X_{t+1}^2)}_{\text{did not get another neighbour}} +
+              \underbrace{Y_{t+1}^2}_{\text{unhappy to happy with neighbour}} \\
+              \implies H_{t+1}^2 - H_t^2 = Z_{t+1} + Y_{t+1}^2 - X_{t+1}^2
+\end{gather*}
+
+Rewriting the variables using indicator functions like in Lemma \ref{cap1lem}:
+\[X_{t+1}^1 = \sum_{p \in \Hp{t}{1}} \Ind_{\Up{t+1}{}}(p) \quad X_{t+1}^2 = \sum_{p \in \Hp{t}{2}} \Ind_{\Up{t+1}{}}(p)\]
+\[Y_{t+1}^1 = \sum_{p \in \Up{t}{}} \Ind_{\Hp{t+1}{1}}(p) \quad Y_{t+1}^2 = \sum_{p \in \Up{t}{}} \Ind_{\Hp{t+1}{2}}(p)\]
+\[Z_{t+1} = \sum_{p \in \Hp{t}{1}} \Ind_{\Hp{t+1}{2}}(p)\]
+
+Then by linearity
+
+\begin{spacing}{1.5}
+\begin{align*}{}
+  &\EX[U_{t+1} - U_t|\ U_t]\\ 
+  &= -\EX[H_{t+1} - H_{t} |\ U_t] \\
+  &= \EX[H_{t+1}^1 - H_{t}^1 |\ U_t] - \EX[H_{t+1}^2 - H_{t}^2 |\ U_t]  \\
+  &= \EX[Y_{t+1}^1 - X_{t+1}^1 - Z_{t+1} |\ U_t] - \EX[Z_{t+1} + Y_{t+1}^2 - X_{t+1}^2 |\ U_t]  \\
+  &= \EX[Y_{t+1}^1 |\ U_t] - \EX[X_{t+1}^1 |\ U_t] - 2 \EX[Z_{t+1}\ |\ U_t] - \EX[Y_{t+1}^2\ |\ U_t] + \EX[X_{t+1}^2 |\ U_t]  \\
+  &= \EX[\sum_{p \in \Up{t}{}} \Ind_{\Hp{t+1}{1}}(p) |\ U_t] - \EX[\sum_{p \in \Hp{t}{1}} \Ind_{\Up{t+1}{}}(p) |\ U_t] 
+  - 2 \EX[\sum_{p \in \Hp{t}{1}} \Ind_{\Hp{t+1}{2}}(p) |\ U_t] - \\
+  &-\EX[\sum_{p \in \Up{t}{}} \Ind_{\Hp{t+1}{2}}(p) |\ U_t] + \EX[\sum_{p \in \Hp{t}{2}} \Ind_{\Up{t+1}{}}(p)|\ U_t]  \\
+  &= \sum_{p \in \Up{t}{}} \Pb(p \in \Hp{t+1}{1}|\ U_t) - \sum_{p \in \Hp{t}{1}} \Pb(p \in \Up{t+1}{} |\ U_t) 
+  - 2 \sum_{p \in \Hp{t}{1}} \Pb(p \in \Hp{t+1}{2} |\ U_t) - \\
+  &-\sum_{p \in \Up{t}{}} \Pb(p \in \Hp{t+1}{2} |\ U_t) + \sum_{p \in \Hp{t}{2}} \Pb(p \in \Up{t+1}{}|\ U_t)  \\
+  &= U_t \Pb(p \in \Hp{t+1}{1} \cap \Up{t}{}|\ U_t) - H_t^1 \Pb(p \in \Up{t+1}{} \cap \Hp{t}{1} |\ U_t) 
+  - 2 H_t^1 \Pb(p \in \Hp{t+1}{2} \cap \Hp{t}{1}|\ U_t) - \\
+  &- U_t \Pb(p \in \Hp{t+1}{2} \cap \Up{t}{} |\ U_t) +  H_t^2 \Pb(p \in \Up{t+1}{} \cap \Hp{t}{2}|\ U_t)  \\
+\end{align*}
+\end{spacing}
+Now one has to figure out each of these probabilities individualy:
+\begin{itemize}
+  \item $\Pb(p \in \Hp{t+1}{1} \cap \Up{t}{}|\ U_t) = \frac{n - H_t^1 - H_t^2/2}{n}\left(1 - \frac{1}{n}\right)^{U_t-1}$: \\
+    The amount of nodes not occupied by happy particles is: $n - H_t^1 - H_t^2/2$.\\
+    The probabilitiy, that an unhappy particle moves to an empty node is $\frac{n - H_t^1 - H_t^2/2}{n}$.\\
+    And the probabilitiy, that it then stays alone is $\left(1 - \frac{1}{n}\right)^{U_t-1}$.
+  \item $\Pb(p \in \Up{t+1}{} \cap \Hp{t}{1}|\ U_t) = 1 - \left(1 - \frac{1}{n}\right)^{U_t} - \frac{1}{n}\left(1 -\frac{1}{n}\right)^{U_t-1}$:\\
+     For a particle to be in $\Up{t+1}{} \cap \Hp{t}{1}$ at least two unhappy particles have to move to its node.\\
+     The probabilitiy for this to happen is 
+     \[1 - \underbrace{\left(1 - \frac{1}{n}\right)^{U_t}}_{\text{no particle hits node}} 
+     - \underbrace{\frac{1}{n}\left(1 -\frac{1}{n}\right)^{U_t-1}}_{\text{one particle hits node}}\]
+  \item $\Pb(p \in \Hp{t+1}{2} \cap \Hp{t}{1}|\ U_t) = \frac{1}{n}\left(1 -\frac{1}{n}\right)^{U_t-1}$: \\
+    Exactly one unhappy particles hits node
+  \item $\Pb(p \in \Hp{t+1}{2} \cap \Up{t}{} |\ U_t) = 
+    \frac{H_t^1}{n} \cdot \left(1 - \frac{1}{n} \right)^{U_t-1} + \frac{n - H_t^1 - H_t^2/2}{n} \cdot \frac{1}{n} \left(1 - \frac{1}{n} \right)^{U_t-2}$:\\
+    For an unhappy particle to become happy with a neighbour, there are two possiblities.
+    Either it moves to a happy particle without a neighbour and no other particles move to that node
+    \[\frac{H_t^1}{n} \cdot \left(1 - \frac{1}{n} \right)^{U_t-1}\]
+    or two unhappy particles move to an empty node at the same time and no other particles move to that node
+    \[\frac{n - H_t^1 - H_t^2/2}{n} \cdot \frac{1}{n} \left(1 - \frac{1}{n} \right)^{U_t-2}\]
+    
+  \item $\Pb(p \in \Up{t+1}{} \cap \Hp{t}{2}|\ U_t) = 1 - \left(1 - \frac{1}{n}\right)^{U_t}$:\\
+    One ore more unhappy particles hit node
+\end{itemize}
+So putting everything together
+\begin{align*}
+  &\EX[U_{t+1} - U_t|\ U_t] = \\ 
+  &U_t \frac{n - H_t^1 - H_t^2/2}{n}\left(1 - \frac{1}{n}\right)^{U_t-1}
+  - H_t^1 \left(1 - \left(1 - \frac{1}{n}\right)^{U_t} - \frac{1}{n}\left(1 -\frac{1}{n}\right)^{U_t-1}\right) \\
+  &- 2 H_t^1 \frac{1}{n}\left(1 -\frac{1}{n}\right)^{U_t-1} -
+  U_t \left(\frac{H_t^1}{n} \cdot \left(1 - \frac{1}{n} \right)^{U_t-1} + \frac{n - H_t^1 - H_t^2/2}{n} \cdot \frac{1}{n} \left(1 - \frac{1}{n} \right)^{U_t-2} \right) \\
+  &+ H_t^2  \left(1 - \left(1 - \frac{1}{n}\right)^{U_t}\right) \\
+\end{align*}
+
+\bibliographystyle{plain} % We choose the "plain" reference style
+\bibliography{quellen} % Entries are in the quellen.bib file
+
+\end{document}
+
