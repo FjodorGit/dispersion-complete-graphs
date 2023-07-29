@@ -15,9 +15,9 @@ set title 'Distribution with n=1000000 and M=500000'      # Set the plot title
 set output '../distribution/fully_connected/capacity_1/M=half_graphsize.pdf'
 plot '../distribution/fully_connected/capacity_1/data/distribution_for_n=1000000_M=500000.dat' i 0 @hist ls 1 notitle
 
-set title 'Distribution with n=1000000 and M=495000'      # Set the plot title
+set title 'Distribution with n=100000 and M=49000'      # Set the plot title
 set output '../distribution/fully_connected/capacity_1/M<half_graphsize.pdf'
-plot '../distribution/fully_connected/capacity_1/data/distribution_for_n=1000000_M=495000.dat' i 0 @hist ls 2 notitle
+plot '../distribution/fully_connected/capacity_1/data/distribution_for_n=100000_M=49000.dat' i 0 @hist ls 2 notitle
 
 set title 'Distribution comparison n=1000000'      # Set the plot title
 set output '../distribution/fully_connected/capacity_1/comparison_n=1000000.pdf'
