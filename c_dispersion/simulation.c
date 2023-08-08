@@ -1,6 +1,7 @@
-#include "graphs/graphs.h"
 #include "pcg/pcg_basic.h"
+#include "utils/utils.h"
 #include <omp.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -60,19 +61,20 @@ int *simulate(uint num_simulations, Graph graph) {
   return result;
 }
 
-int *unhappy_process(Graph graph, int *num_steps) {
+int *unhappy_process(Graph graph, int *num_steps, double *variance_evaluation) {
 
+  uint32_t unhappy_count;
   int maximum = graph.particles_count;
   (*num_steps) = 0;
   int *graph_representation = (int *)calloc(graph.size, sizeof(int));
   int *destinations = (int *)malloc(graph.particles_count * sizeof(int));
   pcg32_random_t rng;
   pcg32_srandom_r(&rng, omp_get_thread_num(), time(NULL));
-  int array_capacity = 50000;
+  int array_capacity = 200000;
   int *result = (int *)calloc(array_capacity, sizeof(int));
 
   graph_representation[0] = graph.particles_count;
-  while (maximum > graph.capacity) {
+  while (maximum > graph.capacity && *num_steps < 199999) {
 
     // expanding result size
     // printf("Step started: %d with maximum: %d\n", *num_steps, maximum);
@@ -90,9 +92,13 @@ int *unhappy_process(Graph graph, int *num_steps) {
       result = expanded_result;
     }
 
-    result[*num_steps] =
-        graph.stepper(&graph_representation, graph.size, graph.capacity,
-                      &maximum, destinations, &rng);
+    unhappy_count = graph.stepper(&graph_representation, graph.size,
+                                  graph.capacity, &maximum, destinations, &rng);
+    result[*num_steps] = unhappy_count;
+    if (*num_steps > 0) {
+      double var = variance(graph, unhappy_count);
+      variance_evaluation[*num_steps] = var;
+    }
     // printf("[ ");
     // for (int i = 0; i < graph.size; i++) {
     //   printf("%d ", graph_representation[i]);
@@ -101,7 +107,7 @@ int *unhappy_process(Graph graph, int *num_steps) {
 
     (*num_steps)++;
     if (*num_steps % 1000 == 0) {
-      printf("Step %d with maximum %d\n", *num_steps, maximum);
+      printf("Step %d\n", *num_steps);
     }
   }
 
