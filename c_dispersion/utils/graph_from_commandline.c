@@ -1,4 +1,4 @@
-#include "../simulation.h"
+#include "./utils.h"
 #include <bits/getopt_core.h>
 #include <math.h>
 #include <stdio.h>
@@ -46,16 +46,17 @@ Graph get_graph_from_commandline(int argc, char *argv[]) {
 
     case 'p':
       particles_count = atoi(optarg);
-      if (particles_count < 2) {
-        printf("Particles count at least 2\n");
-        exit(1);
-      }
       break;
 
     case '?':
       printf("Unknown option: %c\n", optopt);
       exit(1);
     }
+  }
+
+  if (particles_count < 2) {
+    printf("Particles count at least 2\n");
+    exit(1);
   }
 
   int graph_root = sqrt(graph_size);
