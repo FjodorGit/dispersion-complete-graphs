@@ -6,14 +6,13 @@
 #include <sys/random.h>
 #include <time.h>
 
-int step_circle(int **graph_representation, const int graph_size,
-                const int capacity, int *maxp, int *destinations,
-                pcg32_random_t *rngptr) {
+int step_circle(int **graph_representation, int *graph_size, const int capacity,
+                int *maxp, int *destinations, pcg32_random_t *rngptr) {
 
   int destinations_count = 0;
   int unhappy_count = 0;
 
-  for (int i = 0; i < graph_size; i++) {
+  for (int i = 0; i < *graph_size; i++) {
     int value = (*graph_representation)[i];
     if (value > capacity) {
 
@@ -38,10 +37,10 @@ int step_circle(int **graph_representation, const int graph_size,
           if (left_or_right == 0 && i > 0) {
             destinations[destinations_count++] = i - 1;
           } else if (left_or_right == 0 && i == 0) {
-            destinations[destinations_count++] = graph_size - 1;
-          } else if (left_or_right != 0 && i < graph_size - 1) {
+            destinations[destinations_count++] = *graph_size - 1;
+          } else if (left_or_right != 0 && i < *graph_size - 1) {
             destinations[destinations_count++] = i + 1;
-          } else if (left_or_right != 0 && i == graph_size - 1) {
+          } else if (left_or_right != 0 && i == *graph_size - 1) {
             destinations[destinations_count++] = 0;
           }
           check_bits = check_bits << 1;
@@ -54,7 +53,7 @@ int step_circle(int **graph_representation, const int graph_size,
     }
   }
 
-  memset(*graph_representation, 0, graph_size * sizeof(int));
+  memset(*graph_representation, 0, *graph_size * sizeof(int));
   *maxp = 0;
   for (int i = 0; i < destinations_count; i++) {
     int destination = destinations[i];

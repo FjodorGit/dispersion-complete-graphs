@@ -1,48 +1,50 @@
 #include "../pcg/pcg_basic.h"
 #include <omp.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/random.h>
 #include <time.h>
 
-int step_line(int **graph_representation, const int graph_size,
-              const int capacity, int *maxp, int *destinations,
-              pcg32_random_t *rngptr) {
+int step_line(int **graph_representation, int *graph_size, const int capacity,
+              int *maxp, int *destinations, pcg32_random_t *rngptr) {
 
   int destinations_count = 0;
   int unhappy_count = 0;
+  int left_size_increase = 0;
+  int right_size_increase = 0;
+  int particles_count = 0;
 
-  for (int i = 0; i < graph_size; i++) {
+  // printf("[ ");
+  // for (int i = 0; i < *graph_size; i++) {
+  //   printf("%d ", (*graph_representation)[i]);
+  // }
+  // printf("]\n");
+
+  for (int i = 0; i < *graph_size; i++) {
     int value = (*graph_representation)[i];
+    particles_count += value;
     if (value > capacity) {
-
       unhappy_count += value;
-      // To reduce the amount of random numbers needed look at the single bits
-      // of a random number:
-      // For example 26 = 0b11010
-      // A zero means go to the left and a one means go to the right in the
-      // circle. So here two particles would go to the left and three would go
-      // to the right
-      int particle_counter = 0;
-      while (particle_counter < value) {
-        int random = rand();
-        int check_bits = 0x1;
-        for (long unsigned int j = 0;
-             j < sizeof(random) * 8 && particle_counter < value;
-             j++, particle_counter++) {
-          int left_or_right = random & check_bits;
-          printf("Left or right: %s\n", left_or_right == 0 ? "left" : "right");
-          if (left_or_right == 0 && i > 0) {
-            destinations[destinations_count++] = i - 1;
-          } else if (left_or_right == 0 && i == 0) {
-            destinations[destinations_count++] = 0;
-          } else if (left_or_right != 0 && i < graph_size - 1) {
-            destinations[destinations_count++] = i + 1;
-          } else if (left_or_right != 0 && i == graph_size - 1) {
-            destinations[destinations_count++] = graph_size - 1;
+      // 0 means go to the left
+      // 1 means go to the right
+      // 2 means stay
+      for (int j = 0; j < value; j++) {
+        int left_right_stay = pcg32_boundedrand_r(rngptr, 3);
+        // printf("Move %d\n", left_right_stay);
+        if (left_right_stay == 0) {
+          if (i == 0) {
+            left_size_increase = 1;
           }
-          check_bits = check_bits << 1;
+          destinations[destinations_count++] = i - 1;
+        } else if (left_right_stay == 1) {
+          if (i == *graph_size - 1) {
+            right_size_increase = 1;
+          }
+          destinations[destinations_count++] = i + 1;
+        } else if (left_right_stay == 2) {
+          destinations[destinations_count++] = i;
         }
       }
     } else if (value != 0) {
@@ -52,16 +54,20 @@ int step_line(int **graph_representation, const int graph_size,
     }
   }
 
-  memset(*graph_representation, 0, graph_size * sizeof(int));
+  *graph_size = *graph_size + left_size_increase + right_size_increase;
+
+  int *new_graph_representation = calloc(*graph_size, sizeof(int));
+  free(*graph_representation);
+  *graph_representation = new_graph_representation;
+  // Zero-initialize the existing memory block pointed to by
+
   *maxp = 0;
   for (int i = 0; i < destinations_count; i++) {
-    int destination = destinations[i];
+    int destination = destinations[i] + left_size_increase;
     (*graph_representation)[destination]++;
     if ((*graph_representation)[destination] > *maxp) {
       *maxp = (*graph_representation)[destination];
     }
   }
-  printf("unhappy paritcles: %d \n", unhappy_count);
-
   return unhappy_count;
 }

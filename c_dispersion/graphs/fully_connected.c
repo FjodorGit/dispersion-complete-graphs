@@ -7,19 +7,19 @@
 #include <sys/random.h>
 #include <time.h>
 
-int step_fully_connected(int **graph_representation, int graph_size,
+int step_fully_connected(int **graph_representation, int *graph_size,
                          int capacity, int *maxp, int *destinations,
                          pcg32_random_t *rngptr) {
 
   int destinations_count = 0;
   int unhappy_count = 0;
 
-  for (int i = 0; i < graph_size; i++) {
+  for (int i = 0; i < *graph_size; i++) {
     int value = (*graph_representation)[i];
     if (value > capacity) {
       for (int j = 0; j < value; j++) {
         unhappy_count++;
-        int random_index = pcg32_boundedrand_r(rngptr, graph_size);
+        int random_index = pcg32_boundedrand_r(rngptr, *graph_size);
         destinations[destinations_count++] = random_index;
       }
     } else if (value != 0) {
@@ -29,7 +29,7 @@ int step_fully_connected(int **graph_representation, int graph_size,
     }
   }
 
-  memset(*graph_representation, 0, graph_size * sizeof(int));
+  memset(*graph_representation, 0, *graph_size * sizeof(int));
   *maxp = 0;
   for (int i = 0; i < destinations_count; i++) {
     int destination = destinations[i];

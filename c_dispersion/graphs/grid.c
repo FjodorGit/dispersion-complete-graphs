@@ -13,15 +13,13 @@
 // and bottom. If the paritcle decides to move to place where there is no
 // neighbour (for example because its on an edge), then the particle just stays
 // at its current position
-int step_grid(int **graph_representation, const int graph_size,
-              const int capacity, int *maxp, int *destinations,
-              pcg32_random_t *rngptr) {
+int step_grid(int **graph_representation, int *graph_size, const int capacity,
+              int *maxp, int *destinations, pcg32_random_t *rngptr) {
 
   int destinations_count = 0;
   int unhappy_count = 0;
 
-  int graph_root = sqrt(graph_size);
-  for (int i = 0; i < graph_size; i++) {
+  for (int i = 0; i < *graph_size; i++) {
     int value = (*graph_representation)[i];
     if (value > capacity) {
 
@@ -48,38 +46,6 @@ int step_grid(int **graph_representation, const int graph_size,
         for (long unsigned int j = 0;
              j < sizeof(random) * 4 && particle_to_moved < value;
              j++, particle_to_moved++) {
-          int left_right_top_bottom = (random & check_bits) >> (2 * j);
-
-          // switch (left_right_top_bottom) {
-          // case 0:
-          //   printf("left\n");
-          //   break;
-          // case 1:
-          //   printf("right\n");
-          //   break;
-          // case 2:
-          //   printf("top\n");
-          //   break;
-          // case 3:
-          //   printf("bottom\n");
-          //   break;
-          // }
-
-          if (left_right_top_bottom == 0 && i % graph_root > 0) {
-            destinations[destinations_count++] = i - 1;
-          } else if (left_right_top_bottom == 1 &&
-                     (i % graph_root) != graph_root - 1) {
-            destinations[destinations_count++] = i + 1;
-          } else if (left_right_top_bottom == 2 && i > graph_root - 1) {
-            destinations[destinations_count++] = i - graph_root;
-          } else if (left_right_top_bottom == 3 &&
-                     i < graph_root * (graph_root - 1)) {
-            destinations[destinations_count++] = i + graph_root;
-          } else {
-            destinations[destinations_count++] = i;
-          }
-
-          check_bits <<= 2;
         }
       }
     } else if (value != 0) {
@@ -89,7 +55,7 @@ int step_grid(int **graph_representation, const int graph_size,
     }
   }
 
-  memset(*graph_representation, 0, graph_size * sizeof(int));
+  memset(*graph_representation, 0, *graph_size * sizeof(int));
   *maxp = 0;
   for (int i = 0; i < destinations_count; i++) {
     int destination = destinations[i];
