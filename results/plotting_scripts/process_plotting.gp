@@ -45,7 +45,7 @@ set yr [0:11000]
 set title 'Process of unhappy particles n=1000000 and M=505000 (not finished)' 
 set output '/home/fjk/Uni/Bachelorarbeit/Arbeit/bilder/unhappy_capacity_1/never_finishing_unhappy_particles_process.tex'
 set arrow from 0,5689  to 200000, 5689 nohead dashtype 1 lc rgb "#FF7800" lw 4 front
-set xtics ("20k" 20000, "40k" 40000, "60k" 60000, "80k" 80000, "100k" 100000, "120k" 120000, "140k" 140000, "160k" 160000, "180k" 180000, "200k" 200000)
+set xtics ("20k" 20000, "40k" 40000, "60k" 60000, "80k" 80000, "100k" 100000, "120k" 120000, "140k" 140000, "160k" 160000, "180k" 180000, "200k" 200000, "220k" 220000)
 plot 1/0 t "threshold" dashtype 1 lc rgb "#FF7800" lw 4, \
 "../unhappy_process/fully_connected/capacity_1/data/unhappy_process_n=1000000_M=505000.dat" ls 3 notitle with lines
 unset arrow
@@ -55,6 +55,16 @@ set yr [0:18000]
 set title 'Variance for n=100000 and M=50500' 
 set output '/home/fjk/Uni/Bachelorarbeit/Arbeit/bilder/unhappy_capacity_1/with_variance.tex'
 plot "../unhappy_process/fully_connected/capacity_1/data/variance_process_n=100000_M=50500.dat" using 1:2 w l ls 4 notitle, \
+
+#Line process
+set yr [0:800]
+set output '/home/fjk/Uni/Bachelorarbeit/Arbeit/bilder/unhappy_capacity_1/line_process.tex'
+set title 'Processes on a line graph'
+plot "../unhappy_process/line/capacity_1/data/unhappy_process_n=1_M=100.dat" w l ls 4 title "M = 100", \
+"../unhappy_process/line/capacity_1/data/unhappy_process_n=1_M=200.dat" w l ls 5 title "M = 200", \
+"../unhappy_process/line/capacity_1/data/unhappy_process_n=1_M=400.dat" w l ls 1 title "M = 400" ,\
+"../unhappy_process/line/capacity_1/data/unhappy_process_n=1_M=600.dat" w l ls 2 title "M = 600", \
+"../unhappy_process/line/capacity_1/data/unhappy_process_n=1_M=800.dat" w l ls 3 title "M = 800"
 
 # set title 'Process of unhappy particles circle graph' 
 # set yr [0:1000]
