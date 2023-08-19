@@ -57,11 +57,11 @@ void run_experiment(Graph graph) {
     fprintf(unhappy_process_file, "%d\n", unhappy_evaluation[i]);
   }
 
-  double minus_one_std_diviation;
-  double plus_one_std_diviation;
-  for (int i = 1; i < *num_steps; i++) {
-    fprintf(variance_file, "%d %f\n", i, variance_evaluation[i]);
-  }
+  // double minus_one_std_diviation;
+  // double plus_one_std_diviation;
+  // for (int i = 1; i < *num_steps; i++) {
+  //   fprintf(variance_file, "%d %f\n", i, variance_evaluation[i]);
+  // }
 
   fclose(variance_file);
   fclose(unhappy_process_file);

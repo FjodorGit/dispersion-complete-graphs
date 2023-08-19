@@ -67,14 +67,22 @@ int *unhappy_process(Graph graph, int *num_steps, double *variance_evaluation) {
   uint32_t unhappy_count;
   int maximum = graph.particles_count;
   (*num_steps) = 0;
-  int *graph_representation = (int *)calloc(graph.size, sizeof(int));
+  int *graph_representation = (int *)calloc(2 + graph.size, sizeof(int));
   int *destinations = (int *)malloc(graph.particles_count * sizeof(int));
   pcg32_random_t rng;
   pcg32_srandom_r(&rng, omp_get_thread_num(), time(NULL));
   int array_capacity = 200000;
   int *result = (int *)calloc(array_capacity, sizeof(int));
 
-  graph_representation[0] = graph.particles_count;
+  if (strcmp(graph.graph_type, "grid") == 0) {
+    graph.size = 3;
+    graph_representation[0] = 1;
+    graph_representation[1] = 1;
+    graph_representation[2] = graph.particles_count;
+  } else {
+    graph_representation[0] = graph.particles_count;
+  }
+
   while (maximum > graph.capacity) {
 
     // expanding result size

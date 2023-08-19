@@ -14,7 +14,6 @@ int step_line(int **graph_representation, int *graph_size, const int capacity,
   int unhappy_count = 0;
   int left_size_increase = 0;
   int right_size_increase = 0;
-  int particles_count = 0;
 
   // printf("[ ");
   // for (int i = 0; i < *graph_size; i++) {
@@ -24,7 +23,6 @@ int step_line(int **graph_representation, int *graph_size, const int capacity,
 
   for (int i = 0; i < *graph_size; i++) {
     int value = (*graph_representation)[i];
-    particles_count += value;
     if (value > capacity) {
       unhappy_count += value;
       // 0 means go to the left
