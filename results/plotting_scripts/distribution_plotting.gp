@@ -8,7 +8,7 @@ binwidth = 0.04
 binstart = -1
 load 'hist.fct'
 
-set title 'Distribution of $T_{1000000, 500000}'      # Set the plot title
+set title 'Distribution of $T_{1000000, 500000}$'      # Set the plot title
 set output '/home/fjk/Uni/Bachelorarbeit/Arbeit/bilder/distribution_cap1/distribution_for_n=1000000_M=500000.tex'
 stats '../distribution/fully_connected/capacity_1/data/distribution_for_n=1000000_M=500000.dat' nooutput
 mean_value = STATS_mean
@@ -48,6 +48,10 @@ plot '../distribution/grid/capacity_1/data/distribution_for_n=1_M=10000.dat' i 0
 # '../distribution/fully_connected/capacity_1/data/distribution_for_n=1000000_M=500000.dat' i 0 @hist ls 1 title "M=500000",\
 # '../distribution/fully_connected/capacity_1/data/distribution_for_n=1000000_M=501000.dat' i 0 @hist ls 3 title "M=501000"
  
-set title 'Distribution with n=1000000 and M=1000000 and capacity 2'
-set output '/home/fjk/Uni/Bachelorarbeit/Arbeit/bilder/cap2/distribution.pdf'
+set title 'Distribution of $T_{1000000, 1000000}$ with capacity 2'
+unset xrange
+binwidth = 0.04
+binstart = 0
+load 'hist.fct'
+set output '/home/fjk/Uni/Bachelorarbeit/Arbeit/bilder/cap2/distribution.tex'
 plot '../distribution/fully_connected/capacity_2/data/distribution_for_n=1000000_M=1000000.dat' i 0 @hist ls 1 title "M=1000000"
