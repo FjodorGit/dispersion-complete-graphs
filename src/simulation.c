@@ -55,7 +55,7 @@ int *simulate(uint num_simulations, Graph graph) {
         // }
         // printf("] \n");
       }
-      // printf("Num steps: %d \n", num_steps);
+      printf("Num steps: %d \n", num_steps);
 
       if (i % 100 == 0) {
         printf("Simulation %d/%d with %d\n", i, num_simulations, num_steps);
