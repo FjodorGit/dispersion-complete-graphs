@@ -11,7 +11,7 @@
 // increasing the grid size to the left and to the right
 // changes the index of the previouly established destinations
 void adjust_previous_destinations(int **destinations, int destinations_count,
-                                  int adjustment, uint *grid_width) {
+                                  int adjustment, int *grid_width) {
   // printf("adjustment\n");
   if (adjustment == 0) {
     for (int d = destinations_count - 1; d >= 0; d--) {
@@ -49,11 +49,11 @@ int step_grid(int **graph_representation, int *graph_size, const int capacity,
   int top_size_increase = 0;
   int buttom_size_increase = 0;
 
-  uint grid_height = (*graph_representation)[0];
-  uint grid_width = (*graph_representation)[1];
+  int grid_height = (*graph_representation)[0];
+  int grid_width = (*graph_representation)[1];
 
-  const uint current_height = grid_height;
-  const uint current_width = grid_width;
+  const int current_height = grid_height;
+  const int current_width = grid_width;
 
   // for (int h = 0; h < *graph_size - 2;
   //      h +=
