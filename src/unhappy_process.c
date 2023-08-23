@@ -42,16 +42,16 @@ void run_experiment(Graph graph) {
           graph.size, graph.particles_count);
 
   FILE *unhappy_process_file = fopen(unhappy_process_filename, "w");
-  FILE *variance_file = fopen(variance_filename, "w");
+  // FILE *variance_file = fopen(variance_filename, "w");
 
   if (unhappy_process_file == NULL) {
     printf("Failed to open file %s\n", unhappy_process_filename);
     return;
   }
-  if (variance_file == NULL) {
-    printf("Failed to open file %s\n", variance_filename);
-    return;
-  }
+  // if (variance_file == NULL) {
+  //   printf("Failed to open file %s\n", variance_filename);
+  //   return;
+  // }
 
   for (int i = 0; i < *num_steps; i++) {
     fprintf(unhappy_process_file, "%d\n", unhappy_evaluation[i]);
@@ -63,7 +63,7 @@ void run_experiment(Graph graph) {
   //   fprintf(variance_file, "%d %f\n", i, variance_evaluation[i]);
   // }
 
-  fclose(variance_file);
+  // fclose(variance_file);
   fclose(unhappy_process_file);
 
   free(unhappy_evaluation);

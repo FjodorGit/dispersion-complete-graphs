@@ -12,26 +12,34 @@ int *simulate(uint num_simulations, Graph graph) {
 
   int *result = (int *)malloc(num_simulations * sizeof(int));
 
-#pragma omp parallel num_threads(3)
+#pragma omp parallel
   {
     // initialize variables inside block to private them for every thread
     pcg32_random_t rng;
     pcg32_srandom_r(&rng, omp_get_thread_num(), time(NULL));
     int maximum, num_steps;
-    int *graph_representation = (int *)calloc(graph.size, sizeof(int));
+    int *graph_representation;
 
     // array initialized here, to only allocate the memory one time per
     // simulation
     int *destinations = (int *)malloc(graph.particles_count * sizeof(int));
     int graph_size = graph.size;
 
-    printf("Parallization\n");
+    printf("Paralellization\n");
 
 #pragma omp for
     for (int i = 0; i < num_simulations; i++) {
 
-      memset(graph_representation, 0, graph_size * sizeof(int));
-      graph_representation[0] = graph.particles_count;
+      if (strcmp(graph.graph_type, "grid") == 0) {
+        graph_size = 3;
+        graph_representation = (int *)calloc(2 + graph_size, sizeof(int));
+        graph_representation[0] = 1;
+        graph_representation[1] = 1;
+        graph_representation[2] = graph.particles_count;
+      } else {
+        graph_representation = (int *)calloc(graph_size, sizeof(int));
+        graph_representation[0] = graph.particles_count;
+      }
       maximum = graph.particles_count;
       num_steps = 0;
 
@@ -47,7 +55,7 @@ int *simulate(uint num_simulations, Graph graph) {
         // }
         // printf("] \n");
       }
-      // printf("Num steps: %d \n", num_steps);
+      printf("Num steps: %d \n", num_steps);
 
       if (i % 100 == 0) {
         printf("Simulation %d/%d with %d\n", i, num_simulations, num_steps);
@@ -67,19 +75,21 @@ int *unhappy_process(Graph graph, int *num_steps, double *variance_evaluation) {
   uint32_t unhappy_count;
   int maximum = graph.particles_count;
   (*num_steps) = 0;
-  int *graph_representation = (int *)calloc(2 + graph.size, sizeof(int));
   int *destinations = (int *)malloc(graph.particles_count * sizeof(int));
   pcg32_random_t rng;
   pcg32_srandom_r(&rng, omp_get_thread_num(), time(NULL));
   int array_capacity = 200000;
   int *result = (int *)calloc(array_capacity, sizeof(int));
 
+  int *graph_representation;
   if (strcmp(graph.graph_type, "grid") == 0) {
     graph.size = 3;
+    graph_representation = (int *)calloc(2 + graph.size, sizeof(int));
     graph_representation[0] = 1;
     graph_representation[1] = 1;
     graph_representation[2] = graph.particles_count;
   } else {
+    graph_representation = (int *)calloc(graph.size, sizeof(int));
     graph_representation[0] = graph.particles_count;
   }
 
