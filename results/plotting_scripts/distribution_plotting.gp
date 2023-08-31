@@ -50,7 +50,8 @@ plot '../distribution/grid/capacity_1/data/distribution_for_n=1_M=10000.dat' i 0
  
 set title 'Distribution of $T_{1000000, 1000000}$ with capacity 2'
 unset xrange
-binwidth = 0.04
+binwidth = 0.007
+set xlabel "Timesteps/$\\sqrt{n}$"        # Set the x-axis label
 binstart = 0
 load 'hist.fct'
 set output '/home/fjk/Uni/Bachelorarbeit/Arbeit/bilder/cap2/distribution.tex'

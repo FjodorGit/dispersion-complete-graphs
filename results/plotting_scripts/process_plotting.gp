@@ -34,7 +34,7 @@ plot "../unhappy_process/fully_connected/capacity_2/data/unhappy_process_n=10000
 "../unhappy_process/fully_connected/capacity_2/data/unhappy_process_n=1000000_M=990000.dat" w l ls 2 title "M = 990000", \
 "../unhappy_process/fully_connected/capacity_2/data/unhappy_process_n=1000000_M=1002500.dat" w l ls 3 title "M = 1002500"
 
-set yr [0:6000]
+set yr [0:7000]
 set output '/home/fjk/Uni/Bachelorarbeit/Arbeit/bilder/cap2/unhappy_process_zoomed.tex'
 plot "../unhappy_process/fully_connected/capacity_2/data/unhappy_process_n=1000000_M=1000000.dat" w l ls 1 title "M = 1000000", \
 "../unhappy_process/fully_connected/capacity_2/data/unhappy_process_n=1000000_M=990000.dat" w l ls 2 title "M = 990000", \
@@ -49,6 +49,15 @@ set xtics ("20k" 20000, "40k" 40000, "60k" 60000, "80k" 80000, "100k" 100000, "1
 plot 1/0 t "threshold" dashtype 1 lc rgb "#FF7800" lw 4, \
 "../unhappy_process/fully_connected/capacity_1/data/unhappy_process_n=1000000_M=505000.dat" ls 3 notitle with lines
 unset arrow
+
+# Never finishing process capacity_2
+set yr [0:11000]
+set title 'Process of unhappy particles n=1000000 and M=1005000 with capacity 2 (not finished)' 
+set output '/home/fjk/Uni/Bachelorarbeit/Arbeit/bilder/cap2/never_finishing_unhappy_particles_process.tex'
+# set arrow from 0,5689  to 200000, 5689 nohead dashtype 1 lc rgb "#FF7800" lw 4 front
+set xtics ("20k" 20000, "40k" 40000, "60k" 60000, "80k" 80000, "100k" 100000, "120k" 120000, "140k" 140000, "160k" 160000, "180k" 180000, "200k" 200000, "220k" 220000)
+# plot 1/0 t "threshold" dashtype 1 lc rgb "#FF7800" lw 4
+plot "../unhappy_process/fully_connected/capacity_2/data/unhappy_process_n=1000000_M=1005000.dat" ls 3 notitle with lines
 
 # Plot variance
 # set yr [0:18000]
@@ -68,7 +77,7 @@ plot "../unhappy_process/line/capacity_1/data/unhappy_process_n=1_M=200.dat" w l
 "../unhappy_process/line/capacity_1/data/unhappy_process_n=1_M=1000.dat" w l ls 5 title "M = 1000" 
 
 #grid process
-set yr [0:200000]
+set yr [0:250000]
 set xtics ("20k" 20000, "40k" 40000, "60k" 60000, "80k" 80000, "100k" 100000, "120k" 120000, "140k" 140000, "160k" 160000, "180k" 180000, "200k" 200000, "220k" 220000)
 set output '/home/fjk/Uni/Bachelorarbeit/Arbeit/bilder/unhappy_capacity_1/grid_process.tex'
 set title 'Processes on a grid graph'
@@ -76,6 +85,7 @@ plot "../unhappy_process/grid/capacity_1/data/unhappy_process_n=1_M=50000.dat" w
 "../unhappy_process/grid/capacity_1/data/unhappy_process_n=1_M=100000.dat" w l ls 2 title "M = 100000", \
 "../unhappy_process/grid/capacity_1/data/unhappy_process_n=1_M=150000.dat" w l ls 3 title "M = 150000", \
 "../unhappy_process/grid/capacity_1/data/unhappy_process_n=1_M=200000.dat" w l ls 4 title "M = 200000", \
+"../unhappy_process/grid/capacity_1/data/unhappy_process_n=1_M=250000.dat" w l ls 5 title "M = 250000"
 
 # set title 'Process of unhappy particles circle graph' 
 # set yr [0:1000]
