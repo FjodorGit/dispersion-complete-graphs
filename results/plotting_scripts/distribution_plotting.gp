@@ -3,7 +3,7 @@ set terminal cairolatex
 set style arrow 1 head filled size screen 0.03,15,45 ls 4
 set grid
 set ylabel 'Frequency'        # Set the y-axis label
-set xlabel "Timesteps/$\\sqrt{n}$"        # Set the x-axis label
+set xlabel "Steps/$\\sqrt{n}$"        # Set the x-axis label
 binwidth = 0.04
 binstart = -1
 load 'hist.fct'
@@ -25,7 +25,7 @@ unset arrow
 # Distribution line graph
 set title 'Distribution of $T_{\mathcal{L}, 500}$'      # Set the plot title
 set xrange [0:150000]
-set xlabel "Timesteps"
+set xlabel "Steps"
 binwidth = 1000
 binstart = 0
 load 'hist.fct'
@@ -35,7 +35,7 @@ plot '../distribution/line/capacity_1/data/distribution_for_n=1_M=500.dat' i 0 @
 # Distribution grid graph
 set title 'Distribution of $T_{\mathcal{G}, 10000}$'      # Set the plot title
 set xrange [0:15000]
-set xlabel "Timesteps"
+set xlabel "Steps"
 binwidth = 100
 binstart = 0
 load 'hist.fct'
@@ -51,7 +51,7 @@ plot '../distribution/grid/capacity_1/data/distribution_for_n=1_M=10000.dat' i 0
 set title 'Distribution of $T_{1000000, 1000000}$ with capacity 2'
 unset xrange
 binwidth = 0.007
-set xlabel "Timesteps/$\\sqrt{n}$"        # Set the x-axis label
+set xlabel "Steps/$\\sqrt{n}$"        # Set the x-axis label
 binstart = 0
 load 'hist.fct'
 set output '/home/fjk/Uni/Bachelorarbeit/Arbeit/bilder/cap2/distribution.tex'

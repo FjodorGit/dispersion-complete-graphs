@@ -5,7 +5,7 @@ set datafile missing '0'
 set key right top
 set title 'Process of unhappy particles n=1000000'      # Set the plot title
 set ylabel 'Unhappy count'        # Set the x-axis label
-set xlabel 'Timesteps'        # Set the y-axis label
+set xlabel 'Steps'        # Set the y-axis label
 
 
 # Process of particles on fully_connected graph
