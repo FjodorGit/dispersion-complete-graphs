@@ -29,7 +29,7 @@ void run_experiment(Graph graph) {
       printf("Finished unhappy processes %d.\n", pr_nr);
 
       char directory[512] = "../results/average_process";
-      sprintf(directory, "%s/%s/capacity_%d", directory, graph.graph_type,
+      sprintf(directory, "%s/%s/capacity_%d/data", directory, graph.graph_type,
               graph.capacity);
       struct stat st = {0};
       if (stat(directory, &st) == -1) {
