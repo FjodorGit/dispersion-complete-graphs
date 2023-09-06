@@ -10,13 +10,13 @@
 
 void run_experiment(Graph graph) {
   pcg32_srandom(time(0), 42);
-  const int number_of_processes = 40;
+  const int number_of_processes = 1000;
 
 #pragma omp parallel
   {
     printf("Paralellization\n");
 #pragma omp for
-    for (int pr_nr = 20; pr_nr < number_of_processes; pr_nr++) {
+    for (int pr_nr = 40; pr_nr < number_of_processes; pr_nr++) {
 
       int *num_steps = malloc(sizeof(int));
       int *unhappy_evaluation = calloc(21000, sizeof(int));
