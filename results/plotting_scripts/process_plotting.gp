@@ -51,13 +51,22 @@ plot 1/0 t "threshold" dashtype 1 lc rgb "#FF7800" lw 4, \
 unset arrow
 
 # Never finishing process capacity_2
-set yr [0:11000]
-set title 'Process of unhappy particles n=1000000 and M=1005000 with capacity 2 (not finished)' 
+set yr [0:10000]
+set title 'Process of unhappy particles n=1000000 and M=1003000 with capacity 2 (not finished)' 
 set output '/home/fjk/Uni/Bachelorarbeit/Arbeit/bilder/cap2/never_finishing_unhappy_particles_process.tex'
 # set arrow from 0,5689  to 200000, 5689 nohead dashtype 1 lc rgb "#FF7800" lw 4 front
 set xtics ("20k" 20000, "40k" 40000, "60k" 60000, "80k" 80000, "100k" 100000, "120k" 120000, "140k" 140000, "160k" 160000, "180k" 180000, "200k" 200000, "220k" 220000)
 # plot 1/0 t "threshold" dashtype 1 lc rgb "#FF7800" lw 4
-plot "../unhappy_process/fully_connected/capacity_2/data/unhappy_process_n=1000000_M=1005000.dat" ls 3 notitle with lines
+plot "../unhappy_process/fully_connected/capacity_2/data/unhappy_process_n=1000000_M=1003000.dat" ls 3 notitle with lines
+
+# average process capacity_2
+set yr [0:10000]
+set title 'Average process of unhappy particles n=1000000 and M=1005000 with capacity 2 (not finished)' 
+set output '/home/fjk/Uni/Bachelorarbeit/Arbeit/bilder/cap2/average_process.tex'
+# set arrow from 0,5689  to 200000, 5689 nohead dashtype 1 lc rgb "#FF7800" lw 4 front
+unset xtics
+set xtics
+plot "../average_process/fully_connected/capacity_2/average_process_calculated.dat" ls 3 notitle with lines
 
 # Plot variance
 # set yr [0:18000]

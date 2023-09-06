@@ -93,7 +93,7 @@ int *unhappy_process(Graph graph, int *num_steps, double *variance_evaluation) {
     graph_representation[0] = graph.particles_count;
   }
 
-  while (maximum > graph.capacity) {
+  while (maximum > graph.capacity && *num_steps <= 200000) {
 
     // expanding result size
     // printf("Step started: %d with maximum: %d\n", *num_steps, maximum);
@@ -110,6 +110,50 @@ int *unhappy_process(Graph graph, int *num_steps, double *variance_evaluation) {
       }
       result = expanded_result;
     }
+
+    unhappy_count = graph.stepper(&graph_representation, &graph.size,
+                                  graph.capacity, &maximum, destinations, &rng);
+    result[*num_steps] = unhappy_count;
+    // if (*num_steps > 0) {
+    //   double var = variance(graph, unhappy_count);
+    //   variance_evaluation[*num_steps] = var;
+    // }
+
+    (*num_steps)++;
+    if (*num_steps % 1000 == 0) {
+      printf("Step %d\n", *num_steps);
+    }
+  }
+
+  free(graph_representation); // Free the graph array
+  free(destinations);         // Free the destinations array
+  return result;
+}
+
+int *unhappy_process_stopped_early(Graph graph, int *num_steps,
+                                   uint step_limit) {
+
+  uint32_t unhappy_count;
+  int maximum = graph.particles_count;
+  (*num_steps) = 0;
+  int *destinations = (int *)malloc(graph.particles_count * sizeof(int));
+  pcg32_random_t rng;
+  int array_capacity = 21000;
+  int *result = (int *)calloc(array_capacity, sizeof(int));
+
+  int *graph_representation;
+  if (strcmp(graph.graph_type, "grid") == 0) {
+    graph.size = 3;
+    graph_representation = (int *)calloc(2 + graph.size, sizeof(int));
+    graph_representation[0] = 1;
+    graph_representation[1] = 1;
+    graph_representation[2] = graph.particles_count;
+  } else {
+    graph_representation = (int *)calloc(graph.size, sizeof(int));
+    graph_representation[0] = graph.particles_count;
+  }
+
+  while (maximum > graph.capacity && *num_steps <= step_limit) {
 
     unhappy_count = graph.stepper(&graph_representation, &graph.size,
                                   graph.capacity, &maximum, destinations, &rng);
