@@ -16,7 +16,7 @@ void run_experiment(Graph graph) {
   {
     printf("Paralellization\n");
 #pragma omp for
-    for (int pr_nr = 40; pr_nr < number_of_processes; pr_nr++) {
+    for (int pr_nr = 0; pr_nr < number_of_processes; pr_nr++) {
 
       int *num_steps = malloc(sizeof(int));
       int *unhappy_evaluation = calloc(21000, sizeof(int));
