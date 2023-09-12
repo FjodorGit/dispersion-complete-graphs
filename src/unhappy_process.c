@@ -8,6 +8,9 @@
 #include <sys/stat.h>
 #include <time.h>
 
+// Main programm to run a single dispersion process
+// Produces a file with the number of unhappy particles at every
+// step.
 void run_experiment(Graph graph) {
   pcg32_srandom(time(0), 42);
 
@@ -23,12 +26,22 @@ void run_experiment(Graph graph) {
   printf("Finished unhappy processes.");
 
   char directory[512] = "../results/unhappy_process";
-  sprintf(directory, "%s/%s/capacity_%d/data", directory, graph.graph_type,
+  // create result directory if missing
+  sprintf(directory, "%s/%s/capacity_%d", directory, graph.graph_type,
           graph.capacity);
+  struct stat st1 = {0};
+  if (stat(directory, &st1) == -1) {
+    if (mkdir(directory, 0700) == -1) {
+      printf("Error creating directory: %s\n", directory);
+      exit(1);
+    }
+  }
+
+  sprintf(directory, "%s/data", directory);
   struct stat st = {0};
   if (stat(directory, &st) == -1) {
     if (mkdir(directory, 0700) == -1) {
-      printf("Error creating directory: %s\n", directory);
+      perror("Error creating directory");
       exit(1);
     }
   }
@@ -42,28 +55,28 @@ void run_experiment(Graph graph) {
           graph.size, graph.particles_count);
 
   FILE *unhappy_process_file = fopen(unhappy_process_filename, "w");
-  // FILE *variance_file = fopen(variance_filename, "w");
+  FILE *variance_file = fopen(variance_filename, "w");
 
   if (unhappy_process_file == NULL) {
     printf("Failed to open file %s\n", unhappy_process_filename);
     return;
   }
-  // if (variance_file == NULL) {
-  //   printf("Failed to open file %s\n", variance_filename);
-  //   return;
-  // }
+  if (variance_file == NULL) {
+    printf("Failed to open file %s\n", variance_filename);
+    return;
+  }
 
   for (int i = 0; i < *num_steps; i++) {
     fprintf(unhappy_process_file, "%d\n", unhappy_evaluation[i]);
   }
 
-  // double minus_one_std_diviation;
-  // double plus_one_std_diviation;
-  // for (int i = 1; i < *num_steps; i++) {
-  //   fprintf(variance_file, "%d %f\n", i, variance_evaluation[i]);
-  // }
+  double minus_one_std_diviation;
+  double plus_one_std_diviation;
+  for (int i = 1; i < *num_steps; i++) {
+    fprintf(variance_file, "%d %f\n", i, variance_evaluation[i]);
+  }
 
-  // fclose(variance_file);
+  fclose(variance_file);
   fclose(unhappy_process_file);
 
   free(unhappy_evaluation);

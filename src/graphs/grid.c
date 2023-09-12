@@ -12,18 +12,18 @@
 // changes the index of the previouly established destinations
 void adjust_previous_destinations(int **destinations, int destinations_count,
                                   int adjustment, int *grid_width) {
-  // printf("adjustment\n");
   if (adjustment == 0) {
+    // adjustment because of left size increase.
+    // Have to add the node height + 1
     for (int d = destinations_count - 1; d >= 0; d--) {
       int destination_height =
           ((*destinations)[d] < 0) ? -1 : (*destinations)[d] / (*grid_width);
-      // printf("Destination: %d | Destination height: %d\n",
-      // (*destinations)[d],
-      //        destination_height);
       (*destinations)[d] += destination_height + 1;
     }
     *grid_width += 1;
   } else if (adjustment == 1) {
+    // adjustment because of right size increase.
+    // Have to add the node height
     for (int d = destinations_count - 1; d >= 0; d--) {
       int destination_height =
           ((*destinations)[d] < 0) ? -1 : (*destinations)[d] / (*grid_width);
@@ -33,12 +33,16 @@ void adjust_previous_destinations(int **destinations, int destinations_count,
   }
 }
 
-// Grid graph is an infinite grid
+// Simulate a single step on the grid graph
+// Grid graph is an infinite grid ZxZ
 // All particles starts out at the origin
-// Every particle has to option to move to a neighbour on the left, right, top
+// Every particle has the option to move to a neighbour on the left, right, top
 // and bottom or stay at its current node.
 // The first two numbers of graph_representation are height and width of the
 // grid
+// Since an infinite grid cannot be represented in memory we start with just the
+// origin and increase the size of the graph representation as particles move
+// away from the origin
 int step_grid(int **graph_representation, int *graph_size, const int capacity,
               int *maxp, int *destinations, pcg32_random_t *rngptr) {
 
@@ -67,14 +71,10 @@ int step_grid(int **graph_representation, int *graph_size, const int capacity,
 
   for (int h = 0; h < *graph_size - 2; h += current_width) {
     for (int w = 0; w < current_width; w++) {
+      // iterate through grid like a matrix
       int value = (*graph_representation)[2 + h + w];
       if (value > capacity) {
         unhappy_count += value;
-        // 0 means go left
-        // 1 means go right
-        // 2 means go up
-        // 3 means go down
-        // 4 means stay
         for (int j = 0; j < value; j++) {
           int height = h / current_width;
           int current_position = h + w;
@@ -85,41 +85,70 @@ int step_grid(int **graph_representation, int *graph_size, const int capacity,
             current_position += height;
           }
           int left_right_top_buttom_stay = pcg32_boundedrand_r(rngptr, 5);
-          // printf("Move %d\n", left_right_top_buttom_stay);
-          if (left_right_top_buttom_stay == 0) {
+          // sample random number from 0-4
+          //  0 means go left
+          //  1 means go right
+          //  2 means go up
+          //  3 means go down
+          //  4 means stay
+          //
+          //  printf("Move %d\n", left_right_top_buttom_stay);
+          if (left_right_top_buttom_stay == 0) { // particle move to the left
+
             if (w == 0 && !left_size_increase) {
+              // particles is at the left boarder of the current grid. Have to
+              // increase the size of the grid and shift previouly allocated
+              // indeces
+
               adjust_previous_destinations(&destinations, destinations_count,
                                            left_right_top_buttom_stay,
                                            &grid_width);
+
               left_size_increase = true;
+              // won't have to increase the size of the grid to the left during
+              // this step again
+
               destinations[destinations_count++] = current_position + height;
               continue;
             }
             destinations[destinations_count++] = current_position - 1;
-          } else if (left_right_top_buttom_stay == 1) {
+            // particle just moves a position to the left in the standard case
+
+          } else if (left_right_top_buttom_stay == 1) { // particle move right
             if (w == current_width - 1 && !right_size_increase) {
+              // particles is at the right boarder of the current grid. Have to
+              // increase the size of the grid and shift previouly allocated
+              // indeces
+
               adjust_previous_destinations(&destinations, destinations_count,
                                            left_right_top_buttom_stay,
                                            &grid_width);
               right_size_increase = true;
+              // won't have to increase the size of the grid to the right during
+              // this step again
               destinations[destinations_count++] =
                   current_position + height + 1;
               continue;
             }
             destinations[destinations_count++] = current_position + 1;
-          } else if (left_right_top_buttom_stay == 2) {
+            // particle just moves a position to the right in the standard case
+
+          } else if (left_right_top_buttom_stay == 2) { // particle move up
             if (h == 0 && top_size_increase == 0) {
               top_size_increase = 1;
               grid_height += 1;
             }
             destinations[destinations_count++] = current_position - grid_width;
+            // just move the particle up. So one full grid_width back.
           } else if (left_right_top_buttom_stay == 3) {
             if (height == current_height - 1 && buttom_size_increase == 0) {
               buttom_size_increase = 1;
               grid_height += 1;
             }
             destinations[destinations_count++] = current_position + grid_width;
+            // just move the particle up. So one full grid_width further.
           } else if (left_right_top_buttom_stay == 4) {
+            // particle stays at its current node
             destinations[destinations_count++] = current_position;
           }
         }
@@ -136,14 +165,11 @@ int step_grid(int **graph_representation, int *graph_size, const int capacity,
           destinations[destinations_count++] = current_position;
         }
       }
-      // printf("Destinations: [");
-      // for (int d = 0; d < destinations_count; d++) {
-      //   printf(" %d", destinations[d]);
-      // }
-      // printf(" ]\n");
     }
   }
   *graph_size = 2 + (grid_width * grid_height);
+  // 2 is because first two elements of the array are reserved to save
+  // the grid_width and grid_height in the representation
 
   // Zero-initialize the existing memory block pointed to by
   int *new_graph_representation = calloc(*graph_size, sizeof(int));
@@ -151,6 +177,7 @@ int step_grid(int **graph_representation, int *graph_size, const int capacity,
   (new_graph_representation)[1] = grid_width;
   *maxp = 0;
 
+  // build graph_representation from destinations array
   for (int i = 0; i < destinations_count; i++) {
     int destination = destinations[i] + 2 + grid_width * top_size_increase;
     (new_graph_representation)[destination]++;
@@ -161,6 +188,5 @@ int step_grid(int **graph_representation, int *graph_size, const int capacity,
 
   free(*graph_representation);
   *graph_representation = new_graph_representation;
-  // printf("\n");
   return unhappy_count;
 }

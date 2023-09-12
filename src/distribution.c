@@ -9,11 +9,24 @@
 #include <time.h>
 #include <unistd.h>
 
+// Main programm to compute the dispersion time for 'number_of_simulations'
+// process. Produces a file with the dispersion times.
 void run_experiment(Graph graph, const int number_of_simulations) {
 
   char file_name[200] = "../results/distribution";
-  sprintf(file_name, "%s/%s/capacity_%d/data", file_name, graph.graph_type,
+
+  // create result directory if missing
+  sprintf(file_name, "%s/%s/capacity_%d", file_name, graph.graph_type,
           graph.capacity);
+  struct stat st1 = {0};
+  if (stat(file_name, &st1) == -1) {
+    if (mkdir(file_name, 0700) == -1) {
+      printf("Error creating directory: %s\n", file_name);
+      exit(1);
+    }
+  }
+
+  sprintf(file_name, "%s/data", file_name);
   struct stat st = {0};
   if (stat(file_name, &st) == -1) {
     if (mkdir(file_name, 0700) == -1) {

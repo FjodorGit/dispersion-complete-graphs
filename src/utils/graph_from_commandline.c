@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+// function to process the command line arguments of the programm
+// and return the required graph typemj
 Graph get_graph_from_commandline(int argc, char *argv[]) {
   stepper stepper = step_fully_connected;
   int capacity = 1;
@@ -26,10 +28,7 @@ Graph get_graph_from_commandline(int argc, char *argv[]) {
       break;
 
     case 't':
-      if (strcmp(optarg, "circle") == 0) {
-        stepper = step_circle;
-        strcpy(graph_type, optarg);
-      } else if (strcmp(optarg, "line") == 0) {
+      if (strcmp(optarg, "line") == 0) {
         stepper = step_line;
         strcpy(graph_type, optarg);
         inifinite_graph = true;
@@ -37,7 +36,6 @@ Graph get_graph_from_commandline(int argc, char *argv[]) {
         stepper = step_grid;
         strcpy(graph_type, optarg);
         inifinite_graph = true;
-      } else if (strcmp(optarg, "grid") == 0) {
       }
       break;
     case 'c':

@@ -14,6 +14,7 @@ double expected_value(Graph graph, uint32_t unhappy_count) {
   return first_summand - second_summand;
 }
 
+// Implementation of the variance from the formula of the thesis
 double variance(Graph graph, uint32_t unhappy_count) {
   uint32_t H_t = (graph.particles_count - unhappy_count);
   double hit_free = 1 - ((double)H_t / graph.size);

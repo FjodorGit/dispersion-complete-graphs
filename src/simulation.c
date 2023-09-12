@@ -8,6 +8,8 @@
 #include <sys/random.h>
 #include <time.h>
 
+// Computes the dispersion times for 'num_simulation' processes.
+// Returns an array containing these
 int *simulate(uint num_simulations, Graph graph) {
 
   int *result = (int *)malloc(num_simulations * sizeof(int));
@@ -58,7 +60,8 @@ int *simulate(uint num_simulations, Graph graph) {
       // printf("Num steps: %d \n", num_steps);
 
       if (i % 100 == 0) {
-        printf("Simulation %d/%d with %d\n", i, num_simulations, num_steps);
+        printf("Simulation %d/%d ended with %d steps\n", i, num_simulations,
+               num_steps);
       }
 
       result[i] = num_steps;
@@ -69,7 +72,8 @@ int *simulate(uint num_simulations, Graph graph) {
 
   return result;
 }
-
+// Simulates one dispersion process and tracks the amount of unhappy particles
+// at every step. Produces an array containing these.
 int *unhappy_process(Graph graph, int *num_steps, double *variance_evaluation) {
 
   uint32_t unhappy_count;
@@ -96,9 +100,10 @@ int *unhappy_process(Graph graph, int *num_steps, double *variance_evaluation) {
   while (maximum > graph.capacity && *num_steps <= 200000) {
 
     // expanding result size
-    // printf("Step started: %d with maximum: %d\n", *num_steps, maximum);
     if (*num_steps >= array_capacity) {
-      // Double the capacity
+      // Just in the case where the process takes a long time to finish and
+      // the memory of the preallocated array is not enough to store the amount
+      // of unhappy particles at the coming steps. Double the result capacity
       printf("Expanding result size\n");
       array_capacity *= 2;
       int *expanded_result = realloc(result, array_capacity * sizeof(int));
@@ -130,6 +135,8 @@ int *unhappy_process(Graph graph, int *num_steps, double *variance_evaluation) {
   return result;
 }
 
+// Same as above, only here we can specify a maximum amount of steps the process
+// is allowed to take before terminating
 int *unhappy_process_stopped_early(Graph graph, int *num_steps,
                                    uint step_limit) {
 
