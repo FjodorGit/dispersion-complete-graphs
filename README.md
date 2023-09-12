@@ -27,4 +27,5 @@ Every one of these executables has the following options:
 - `./distribution.out -s 100 -p 50`: Compute the dispersion time of the process on a fully connected graph wih size 100 and 50 particles.
 - `./distribution.out -s 100 -p 50 -c 2`: Same as before only now the graph has capacity 2.
 - `./unhappy_process.out -t grid -p 50`: Run a single unhappy process on the grid with 50 particles.
-- `./unhappy_process.out -t line -p 20 -d`: Run a single unhappy process on the line with 20 particles and debug information. This is what the debug information would look like in this case. ![alt text](https://github.com/FjodorGit/dispersion-process-graphs/blob/main/.image/Screenshot%20from%202023-09-12%2011-39-29.png?raw=true). \n Each group of move and stay command corresponds to a node on the graph.
+- `./unhappy_process.out -t line -p 20 -d`: Run a single unhappy process on the line with 20 particles and debug information. This is what the debug information would look like in this case. ![alt text](https://github.com/FjodorGit/dispersion-process-graphs/blob/main/.image/Screenshot%20from%202023-09-12%2011-39-29.png?raw=true).
+  Each group of move and stay command corresponds to a node on the graph.
