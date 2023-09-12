@@ -15,21 +15,34 @@
 //               one particle will move
 int step_fully_connected(int **graph_representation, int *graph_size,
                          int capacity, int *maxp, int *destinations,
-                         pcg32_random_t *rngptr) {
+                         pcg32_random_t *rngptr, bool debug_info) {
 
   int destinations_count = 0;
   int unhappy_count = 0;
+
+  // show graph_representation
+  if (debug_info) {
+    printf("[ ");
+    for (int i = 0; i < *graph_size; i++) {
+      printf("%d ", (*graph_representation)[i]);
+    }
+    printf("]\n");
+  }
 
   for (int i = 0; i < *graph_size; i++) {
     // iterate over nodes of the graph
     int value = (*graph_representation)[i];
     // count of particles on a node
     if (value > capacity) {
+      printf("\n");
       // case where particles on node are unhappy
       for (int j = 0; j < value; j++) {
         unhappy_count++;
         // generate a new destination node for every unhappy particle
         int random_index = pcg32_boundedrand_r(rngptr, *graph_size);
+        if (debug_info) {
+          printf("Move to nodej %d\n", random_index);
+        }
         destinations[destinations_count++] = random_index;
       }
     } else if (value != 0) {
@@ -38,6 +51,9 @@ int step_fully_connected(int **graph_representation, int *graph_size,
         destinations[destinations_count++] = i;
       }
     }
+  }
+  if (debug_info) {
+    printf("\n\n");
   }
 
   memset(*graph_representation, 0,

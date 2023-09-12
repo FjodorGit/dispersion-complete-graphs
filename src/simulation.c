@@ -1,6 +1,7 @@
 #include "pcg/pcg_basic.h"
 #include "utils/utils.h"
 #include <omp.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,17 +48,9 @@ int *simulate(uint num_simulations, Graph graph) {
 
       while (maximum > graph.capacity) {
         graph.stepper(&graph_representation, &graph_size, graph.capacity,
-                      &maximum, destinations, &rng);
+                      &maximum, destinations, &rng, graph.debug_info);
         num_steps++;
-
-        // Print the result
-        // printf("[ ");
-        // for (int i = 0; i < graph_size; i++) {
-        //   printf("%d ", graph[i]);
-        // }
-        // printf("] \n");
       }
-      // printf("Num steps: %d \n", num_steps);
 
       if (i % 100 == 0) {
         printf("Simulation %d/%d ended with %d steps\n", i, num_simulations,
@@ -116,13 +109,14 @@ int *unhappy_process(Graph graph, int *num_steps, double *variance_evaluation) {
       result = expanded_result;
     }
 
-    unhappy_count = graph.stepper(&graph_representation, &graph.size,
-                                  graph.capacity, &maximum, destinations, &rng);
+    unhappy_count =
+        graph.stepper(&graph_representation, &graph.size, graph.capacity,
+                      &maximum, destinations, &rng, graph.debug_info);
     result[*num_steps] = unhappy_count;
-    // if (*num_steps > 0) {
-    //   double var = variance(graph, unhappy_count);
-    //   variance_evaluation[*num_steps] = var;
-    // }
+    if (*num_steps > 0) {
+      double var = variance(graph, unhappy_count);
+      variance_evaluation[*num_steps] = var;
+    }
 
     (*num_steps)++;
     if (*num_steps % 1000 == 0) {
@@ -162,13 +156,10 @@ int *unhappy_process_stopped_early(Graph graph, int *num_steps,
 
   while (maximum > graph.capacity && *num_steps <= step_limit) {
 
-    unhappy_count = graph.stepper(&graph_representation, &graph.size,
-                                  graph.capacity, &maximum, destinations, &rng);
+    unhappy_count =
+        graph.stepper(&graph_representation, &graph.size, graph.capacity,
+                      &maximum, destinations, &rng, graph.debug_info);
     result[*num_steps] = unhappy_count;
-    // if (*num_steps > 0) {
-    //   double var = variance(graph, unhappy_count);
-    //   variance_evaluation[*num_steps] = var;
-    // }
 
     (*num_steps)++;
     if (*num_steps % 1000 == 0) {

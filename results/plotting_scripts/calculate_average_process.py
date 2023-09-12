@@ -1,6 +1,8 @@
 import numpy as np
 import os
 
+# This script calculates the average process from the 1000 files  
+
 data_dir_name = "/home/fjk/Uni/Bachelorarbeit/graph-dispersion/results/average_process/fully_connected/capacity_1/data"
 
 file_count = 0

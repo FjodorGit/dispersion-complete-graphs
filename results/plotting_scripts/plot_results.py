@@ -3,6 +3,8 @@ import pandas as pd
 import re
 import os
 
+# This script produces the tables for the mean and variance of the distribution
+
 # compute mean and variance from dat files in distribution data folders
 data_dir_name = "/home/fjk/Uni/Bachelorarbeit/graph-dispersion/results/distribution/fully_connected/capacity_1/data"
 

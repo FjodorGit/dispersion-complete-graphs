@@ -44,7 +44,8 @@ void adjust_previous_destinations(int **destinations, int destinations_count,
 // origin and increase the size of the graph representation as particles move
 // away from the origin
 int step_grid(int **graph_representation, int *graph_size, const int capacity,
-              int *maxp, int *destinations, pcg32_random_t *rngptr) {
+              int *maxp, int *destinations, pcg32_random_t *rngptr,
+              bool debug_info) {
 
   int destinations_count = 0;
   int unhappy_count = 0;
@@ -59,21 +60,25 @@ int step_grid(int **graph_representation, int *graph_size, const int capacity,
   const int current_height = grid_height;
   const int current_width = grid_width;
 
-  // for (int h = 0; h < *graph_size - 2;
-  //      h +=
-  //      grid_width) { // -2 because first two numbers are the width and height
-  //   printf("[");
-  //   for (int w = 0; w < grid_width; w++) {
-  //     printf("%d ", (*graph_representation)[2 + h + w]);
-  //   }
-  //   printf("\b]\n");
-  // }
+  // printing the graph representation
+  if (debug_info) {
+    for (int h = 0; h < *graph_size - 2;
+         h +=
+         grid_width) { // -2 because first two numbers are the width and height
+      printf("[");
+      for (int w = 0; w < grid_width; w++) {
+        printf("%d ", (*graph_representation)[2 + h + w]);
+      }
+      printf("\b]\n");
+    }
+  }
 
   for (int h = 0; h < *graph_size - 2; h += current_width) {
     for (int w = 0; w < current_width; w++) {
       // iterate through grid like a matrix
       int value = (*graph_representation)[2 + h + w];
       if (value > capacity) {
+        printf("\n");
         unhappy_count += value;
         for (int j = 0; j < value; j++) {
           int height = h / current_width;
@@ -92,7 +97,10 @@ int step_grid(int **graph_representation, int *graph_size, const int capacity,
           //  3 means go down
           //  4 means stay
           //
-          //  printf("Move %d\n", left_right_top_buttom_stay);
+          if (debug_info) {
+            printf("Move %d\n", left_right_top_buttom_stay);
+          }
+
           if (left_right_top_buttom_stay == 0) { // particle move to the left
 
             if (w == 0 && !left_size_increase) {
@@ -166,6 +174,9 @@ int step_grid(int **graph_representation, int *graph_size, const int capacity,
         }
       }
     }
+  }
+  if (debug_info) {
+    printf("\n\n");
   }
   *graph_size = 2 + (grid_width * grid_height);
   // 2 is because first two elements of the array are reserved to save

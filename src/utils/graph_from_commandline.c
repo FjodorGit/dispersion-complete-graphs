@@ -7,12 +7,13 @@
 #include <string.h>
 
 // function to process the command line arguments of the programm
-// and return the required graph typemj
+// and return the required graph type
 Graph get_graph_from_commandline(int argc, char *argv[]) {
   stepper stepper = step_fully_connected;
   int capacity = 1;
   int graph_size = 1;
   int particles_count = 0;
+  bool debug_info = false;
   int opt;
   bool user_specified_graph_size = false;
   bool inifinite_graph = false;
@@ -20,7 +21,7 @@ Graph get_graph_from_commandline(int argc, char *argv[]) {
 
   printf("Initializing graph..\n");
 
-  while ((opt = getopt(argc, argv, "s:t:c:p:")) != -1) {
+  while ((opt = getopt(argc, argv, "s:t:c:p:d")) != -1) {
     switch (opt) {
     case 's':
       graph_size = atoi(optarg);
@@ -50,9 +51,8 @@ Graph get_graph_from_commandline(int argc, char *argv[]) {
       particles_count = atoi(optarg);
       break;
 
-    case '?':
-      printf("Unknown option: %c\n", optopt);
-      exit(1);
+    case 'd':
+      debug_info = true;
     }
   }
 
@@ -76,7 +76,8 @@ Graph get_graph_from_commandline(int argc, char *argv[]) {
   Graph graph = {.size = graph_size,
                  .capacity = capacity,
                  .particles_count = particles_count,
-                 .stepper = stepper};
+                 .stepper = stepper,
+                 .debug_info = debug_info};
   strcpy(graph.graph_type, graph_type);
   return graph;
 }

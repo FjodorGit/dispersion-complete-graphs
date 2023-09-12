@@ -15,22 +15,26 @@
 // just the origin and increase the size of the graph representation as
 // particles move away from the origin
 int step_line(int **graph_representation, int *graph_size, const int capacity,
-              int *maxp, int *destinations, pcg32_random_t *rngptr) {
+              int *maxp, int *destinations, pcg32_random_t *rngptr,
+              bool debug_info) {
 
   int destinations_count = 0;
   int unhappy_count = 0;
   int left_size_increase = 0;
   int right_size_increase = 0;
 
-  // printf("[ ");
-  // for (int i = 0; i < *graph_size; i++) {
-  //   printf("%d ", (*graph_representation)[i]);
-  // }
-  // printf("]\n");
+  if (debug_info) {
+    printf("[ ");
+    for (int i = 0; i < *graph_size; i++) {
+      printf("%d ", (*graph_representation)[i]);
+    }
+    printf("]\n");
+  }
 
   for (int i = 0; i < *graph_size; i++) {
     int value = (*graph_representation)[i];
     if (value > capacity) {
+      printf("\n");
       unhappy_count += value;
       for (int j = 0; j < value; j++) {
         // generate a new destination for every unhappy particle
@@ -39,7 +43,9 @@ int step_line(int **graph_representation, int *graph_size, const int capacity,
         // 0 means go to the left
         // 1 means go to the right
         // 2 means stay
-        // printf("Move %d\n", left_right_stay);
+        if (debug_info) {
+          printf("Move %d\n", left_right_stay);
+        }
         if (left_right_stay == 0) {
           // particle moves to the left
           if (i == 0) {
@@ -66,6 +72,9 @@ int step_line(int **graph_representation, int *graph_size, const int capacity,
         destinations[destinations_count++] = i;
       }
     }
+  }
+  if (debug_info) {
+    printf("\n\n");
   }
 
   *graph_size = *graph_size + left_size_increase + right_size_increase;
