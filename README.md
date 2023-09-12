@@ -20,4 +20,11 @@ Every one of these executables has the following options:
 - `-s (number: graph size)`: specifies the graph size. Only make sense to specify when running experiments on the fully connected graph, because the other graphs are infinite anyway.
 - `-p (number: number of particles):` the amount of particles to use for the experiment.
 - `-c (number: capacity)` the capacity of each node. The maximum amount of paricles that can be on a node and still be happy. Omitting this flag defaults to one.
-- `-d` : Flag to print debug information i.e the visualize the graph representation and where particles mode at every step.
+- `-d` : Flag to print debug information i.e the visualize the graph representation and where particles mode at every step. Makes most sense, when running a single unhappy process with low particles counts.
+
+**Examples:**
+
+- `./distribution.out -s 100 -p 50`: \nCompute the dispersion time of the process on a fully connected graph wih size 100 and 50 particles.
+- `./distribution.out -s 100 -p 50 -c 2`: \nSame as before only now the graph has capacity 2.
+- `./unhappy_process.out -t grid -p 50`: \nRun a single unhappy process on the grid with 50 particles.
+- `./unhappy_process.out -t line -p 20 -d`: \nRun a single unhappy process on the line with 20 particles and debug information. This is what the debug information would look like in this case.
