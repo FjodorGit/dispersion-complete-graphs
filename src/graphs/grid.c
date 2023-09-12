@@ -97,11 +97,11 @@ int step_grid(int **graph_representation, int *graph_size, const int capacity,
           //  3 means go down
           //  4 means stay
           //
-          if (debug_info) {
-            printf("Move %d\n", left_right_top_buttom_stay);
-          }
 
           if (left_right_top_buttom_stay == 0) { // particle move to the left
+            if (debug_info) {
+              printf("Move to the left\n");
+            }
 
             if (w == 0 && !left_size_increase) {
               // particles is at the left boarder of the current grid. Have to
@@ -123,6 +123,9 @@ int step_grid(int **graph_representation, int *graph_size, const int capacity,
             // particle just moves a position to the left in the standard case
 
           } else if (left_right_top_buttom_stay == 1) { // particle move right
+            if (debug_info) {
+              printf("Move to the right\n");
+            }
             if (w == current_width - 1 && !right_size_increase) {
               // particles is at the right boarder of the current grid. Have to
               // increase the size of the grid and shift previouly allocated
@@ -142,6 +145,9 @@ int step_grid(int **graph_representation, int *graph_size, const int capacity,
             // particle just moves a position to the right in the standard case
 
           } else if (left_right_top_buttom_stay == 2) { // particle move up
+            if (debug_info) {
+              printf("Move up\n");
+            }
             if (h == 0 && top_size_increase == 0) {
               top_size_increase = 1;
               grid_height += 1;
@@ -149,6 +155,9 @@ int step_grid(int **graph_representation, int *graph_size, const int capacity,
             destinations[destinations_count++] = current_position - grid_width;
             // just move the particle up. So one full grid_width back.
           } else if (left_right_top_buttom_stay == 3) {
+            if (debug_info) {
+              printf("Move down\n");
+            }
             if (height == current_height - 1 && buttom_size_increase == 0) {
               buttom_size_increase = 1;
               grid_height += 1;
@@ -156,6 +165,9 @@ int step_grid(int **graph_representation, int *graph_size, const int capacity,
             destinations[destinations_count++] = current_position + grid_width;
             // just move the particle up. So one full grid_width further.
           } else if (left_right_top_buttom_stay == 4) {
+            if (debug_info) {
+              printf("Stay at your node\n");
+            }
             // particle stays at its current node
             destinations[destinations_count++] = current_position;
           }
@@ -176,7 +188,7 @@ int step_grid(int **graph_representation, int *graph_size, const int capacity,
     }
   }
   if (debug_info) {
-    printf("\n\n");
+    printf("\n\n\n");
   }
   *graph_size = 2 + (grid_width * grid_height);
   // 2 is because first two elements of the array are reserved to save

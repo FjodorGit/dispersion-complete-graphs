@@ -43,10 +43,10 @@ int step_line(int **graph_representation, int *graph_size, const int capacity,
         // 0 means go to the left
         // 1 means go to the right
         // 2 means stay
-        if (debug_info) {
-          printf("Move %d\n", left_right_stay);
-        }
         if (left_right_stay == 0) {
+          if (debug_info) {
+            printf("Move to the left\n");
+          }
           // particle moves to the left
           if (i == 0) {
             left_size_increase = 1;
@@ -55,6 +55,9 @@ int step_line(int **graph_representation, int *graph_size, const int capacity,
           }
           destinations[destinations_count++] = i - 1; // move left
         } else if (left_right_stay == 1) {
+          if (debug_info) {
+            printf("Move to the right\n");
+          }
           // particle moves to the right
           if (i == *graph_size - 1) {
             right_size_increase = 1;
@@ -63,6 +66,9 @@ int step_line(int **graph_representation, int *graph_size, const int capacity,
           }
           destinations[destinations_count++] = i + 1; // move right
         } else if (left_right_stay == 2) {
+          if (debug_info) {
+            printf("Stay at your node\n");
+          }
           destinations[destinations_count++] = i; // stay
         }
       }
@@ -74,7 +80,7 @@ int step_line(int **graph_representation, int *graph_size, const int capacity,
     }
   }
   if (debug_info) {
-    printf("\n\n");
+    printf("\n\n\n");
   }
 
   *graph_size = *graph_size + left_size_increase + right_size_increase;

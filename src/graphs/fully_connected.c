@@ -41,7 +41,7 @@ int step_fully_connected(int **graph_representation, int *graph_size,
         // generate a new destination node for every unhappy particle
         int random_index = pcg32_boundedrand_r(rngptr, *graph_size);
         if (debug_info) {
-          printf("Move to nodej %d\n", random_index);
+          printf("Move to node %d\n", random_index);
         }
         destinations[destinations_count++] = random_index;
       }
@@ -53,7 +53,7 @@ int step_fully_connected(int **graph_representation, int *graph_size,
     }
   }
   if (debug_info) {
-    printf("\n\n");
+    printf("\n\n\n");
   }
 
   memset(*graph_representation, 0,
