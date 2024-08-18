@@ -13,7 +13,6 @@ Run a single dispersion process while keeping track of the number of unhappy par
 
 **average process:**
 Run 1000 dispersion processes and keep track of the number of unhappy particles in each one of them.
-
 Every one of these executables has the following options:
 
 - `-t (string: graph type)`: specifies the graph type. Omit this flag to run the process on the fully connected graph. The other possible graph types are `grid` and `line`.
